@@ -37,24 +37,6 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     return result_matrix;
 }
 
-void matrix_print(const matrixf_s *matrix, const char *message) {
-    printf("%s\n", message);
-    for (int i = 0; i < matrix->rows; i++) {
-        for (int j = 0; j < matrix->cols; j++) {
-            printf("%lf ", matrix->tab[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
-double relu(double x) {
-    return fmax(0, x);
-}
-
-double d_relu (double x) {
-    return x > 0 ? 1 : 0;
-}
 
 int main() {
     return 0;
