@@ -37,7 +37,7 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     return result_matrix;
 }
 
-void matrix_print(const matrixf_s *matrix, const char *message) {
+void matrixf_print(const matrixf_s *matrix, const char *message) {
     printf("%s\n", message);
     for (int i = 0; i < matrix->rows; i++) {
         for (int j = 0; j < matrix->cols; j++) {
