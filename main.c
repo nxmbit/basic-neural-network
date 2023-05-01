@@ -37,6 +37,14 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     return result_matrix;
 }
 
+void matrix_free(matrixf_s *matrix) {
+    for (int i = 0; i < matrix->rows; i++) {
+        free(matrix->tab[i]);
+    }
+    free(matrix->tab);
+    free(matrix);
+}
+
 void matrixf_print(const matrixf_s *matrix, const char *message) {
     printf("%s\n", message);
     for (int i = 0; i < matrix->rows; i++) {
