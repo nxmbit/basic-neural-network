@@ -20,6 +20,20 @@ matrixf_s *generate_struct(int rows, int cols) {
     return matrix;
 }
 
+matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
+    if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
+        printf("Matrix addition is not possible!\n");
+    }
+    matrixf_s *result_matrix = generate_struct(matrix_1->rows, matrix_1->cols);
+
+    for (int i = 0; i < result_matrix->rows; i++) {
+        for (int j = 0; j < result_matrix->cols; j++) {
+            result_matrix->tab[i][j] = matrix_1->tab[i][j] + matrix_2->tab[i][j];
+        }
+    }
+    return result_matrix;
+}
+
 matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
     if (matrix_1->cols != matrix_2->rows) {
         printf("Matrix multiplication is not possible!\n");
