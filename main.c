@@ -138,6 +138,7 @@ void initialize_biases(neural_network_s * network) {
 }
 
 double gaussian_noise_generator(double mean, double std_deviation) {
+    srand48(time(NULL));
     double u1 = drand48();
     double u2 = drand48();
     //box muller transform
