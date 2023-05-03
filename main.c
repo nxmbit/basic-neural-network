@@ -65,6 +65,10 @@ void free_neural_network(neural_network_s *network) {
     free(network);
 }
 
+void feed_forward(neural_network_s *network)
+
+//void cost(neural_network_s *network, )
+
  neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     neural_network_s *network = malloc(sizeof(neural_network_s));
     network->layers = malloc(layers_count * sizeof(layer_s));
@@ -144,6 +148,18 @@ double gaussian_noise_generator(double mean, double std_deviation) {
     //box muller transform
     double z0 = sqrt(-2.0 * log(u1)) * cos(2 * M_PI * u2);
     return (std_deviation * z0) + mean;
+}
+
+void feed_forward(neural_network_s *network) {
+    matrixf_s *multiplication_result;
+    for (int i = 1; i < network->layers_count; i++) {
+        multiplication_result = matrix_multiply(network->layers[i]->weights, network->layers[i - 1]->neurons);
+        network->layers[i]->neurons = matrix_add(multiplication_result, network->layers[i]->biases);
+        for (int j = 0; j < network->layers[i]->layer_size; j++) {
+            network->layers[i]->neurons->tab[j][0] = relu(network->layers[i]->neurons->tab[j][0]);
+        }
+        free(multiplication_result);
+    }
 }
 
 void matrixf_free(matrixf_s *matrix) {
