@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <math.h>
+#include <time.h>
+
 
 typedef struct matrixf_s {
     double **tab;
@@ -9,7 +11,50 @@ typedef struct matrixf_s {
     int cols;
 } matrixf_s;
 
-matrixf_s *generate_struct(int rows, int cols) {
+typedef struct layer_s {
+    int layer_size;
+    int next_layer_size;
+    matrixf_s *neurons;
+    matrixf_s *weights;
+    matrixf_s *biases;
+} layer_s;
+
+typedef struct neural_network_s {
+    layer_s *layers;
+    int layers_count;
+    int *layers_sizes;
+} neural_network_s;
+
+layer_s *create_layer_s(int layer_size, int next_layer_size);
+matrixf_s *create_matrix(int rows, int cols);
+matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
+void matrixf_free(matrixf_s *matrix);
+void matrixf_print(const matrixf_s *matrix, const char *message);
+
+layer_s *create_layer_s(int layer_size, int next_layer_size) {
+    layer_s *layer = malloc(sizeof(layer_s));
+    layer->layer_size = layer_size;
+    layer->next_layer_size = next_layer_size;
+    layer->neurons = create_matrix(layer_size, 1);
+    layer->weights = create_matrix(next_layer_size, layer_size);
+    layer->biases = create_matrix(next_layer_size, 1);
+    return layer;
+}
+
+void free_layer_s(layer_s *layer) {
+    matrixf_free(layer->neurons);
+    matrixf_free(layer->weights);
+    matrixf_free(layer->biases);
+    free(layer);
+}
+
+neural_network_s *create_neural_network_s(int layers_count) {
+    neural_network_s *network = malloc(sizeof(neural_network_s));
+    network->layers = malloc(layers_count * sizeof(layer_s));
+    return network;
+}
+
+matrixf_s *create_matrix(int rows, int cols) {
     matrixf_s *matrix = malloc(sizeof(matrixf_s));
     matrix->tab = malloc(rows * sizeof(double *));
     for (int i = 0; i < rows; i++) {
@@ -24,7 +69,7 @@ matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
     if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
         printf("Matrix addition is not possible!\n");
     }
-    matrixf_s *result_matrix = generate_struct(matrix_1->rows, matrix_1->cols);
+    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_1->cols);
 
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
@@ -38,7 +83,7 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     if (matrix_1->cols != matrix_2->rows) {
         printf("Matrix multiplication is not possible!\n");
     }
-    matrixf_s *result_matrix = generate_struct(matrix_1->rows, matrix_2->cols);
+    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_2->cols);
 
     for (int i = 0; i < matrix_1->rows; i++) {
         for (int j = 0; j < matrix_2->cols; j++) {
@@ -51,7 +96,7 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     return result_matrix;
 }
 
-void matrix_free(matrixf_s *matrix) {
+void matrixf_free(matrixf_s *matrix) {
     for (int i = 0; i < matrix->rows; i++) {
         free(matrix->tab[i]);
     }
