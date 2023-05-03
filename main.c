@@ -4,7 +4,6 @@
 #include <math.h>
 #include <time.h>
 
-
 typedef struct matrixf_s {
     double **tab;
     int rows;
@@ -20,18 +19,19 @@ typedef struct layer_s {
 } layer_s;
 
 typedef struct neural_network_s {
-    layer_s *layers;
+    layer_s **layers;
     int layers_count;
     int *layers_sizes;
+    double cost;
 } neural_network_s;
 
-layer_s *create_layer_s(int layer_size, int next_layer_size);
+layer_s *create_layer(int layer_size, int next_layer_size);
 matrixf_s *create_matrix(int rows, int cols);
 matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
 void matrixf_free(matrixf_s *matrix);
 void matrixf_print(const matrixf_s *matrix, const char *message);
 
-layer_s *create_layer_s(int layer_size, int next_layer_size) {
+layer_s *create_layer(int layer_size, int next_layer_size) {
     layer_s *layer = malloc(sizeof(layer_s));
     layer->layer_size = layer_size;
     layer->next_layer_size = next_layer_size;
@@ -41,16 +41,31 @@ layer_s *create_layer_s(int layer_size, int next_layer_size) {
     return layer;
 }
 
-void free_layer_s(layer_s *layer) {
+void free_layer(layer_s *layer) {
     matrixf_free(layer->neurons);
     matrixf_free(layer->weights);
     matrixf_free(layer->biases);
     free(layer);
 }
 
-neural_network_s *create_neural_network_s(int layers_count) {
+void free_neural_network(neural_network_s *network) {
+    for (int i = 0; i< network->layers_count; i++) {
+        free_layer(network->layers[i]);
+    }
+    free(network->layers);
+    free(network->layers_sizes);
+    free(network);
+}
+
+ neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     neural_network_s *network = malloc(sizeof(neural_network_s));
     network->layers = malloc(layers_count * sizeof(layer_s));
+    network->layers_count = layers_count;
+    network->layers_sizes = layers_sizes;
+    for (int i = 0; i < layers_count; i++) {
+        network->layers[i] = create_layer(layers_sizes[i], layers_sizes[i + 1]);
+    }
+    network->cost = 0;
     return network;
 }
 
@@ -125,4 +140,4 @@ double d_relu (double x) {
 
 int main() {
     return 0;
-};
+}
