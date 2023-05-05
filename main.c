@@ -25,6 +25,11 @@ typedef struct neural_network_s {
     double cost;
 } neural_network_s;
 
+typedef struct dataset_s {
+    matrixf_s *inputs;
+    matrixf_s *expected_outputs;
+} dataset_s;
+
 layer_s *create_layer(int layer_size, int next_layer_size);
 
 matrixf_s *create_matrix(int rows, int cols);
@@ -65,9 +70,7 @@ void free_neural_network(neural_network_s *network) {
     free(network);
 }
 
-void feed_forward(neural_network_s *network)
-
-//void cost(neural_network_s *network, )
+void cost(neural_network_s *network, )
 
  neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     neural_network_s *network = malloc(sizeof(neural_network_s));
@@ -158,7 +161,7 @@ void feed_forward(neural_network_s *network) {
         for (int j = 0; j < network->layers[i]->layer_size; j++) {
             network->layers[i]->neurons->tab[j][0] = relu(network->layers[i]->neurons->tab[j][0]);
         }
-        free(multiplication_result);
+        matrixf_free(multiplication_result);
     }
 }
 
