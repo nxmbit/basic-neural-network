@@ -29,7 +29,7 @@ matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
 
 matrixf_s *matrix_subtract(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
     if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
-        printf("Matrix addition is not possible!\n");
+        printf("Matrix subtraction is not possible!\n");
     }
     matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_1->cols);
 
@@ -53,6 +53,17 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
             for (int k = 0; k < matrix_1->cols; k++) {
                 result_matrix->tab[i][j] += (matrix_1->tab[i][k] * matrix_2->tab[k][j]);
             }
+        }
+    }
+    return result_matrix;
+}
+
+matrixf_s *matrix_square_elements(const matrixf_s *matrix) {
+    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+
+    for (int i = 0; i < result_matrix->rows; i++) {
+        for (int j = 0; j < result_matrix->cols; j++) {
+            result_matrix->tab[i][j] = matrix->tab[i][j] * matrix->tab[i][j];
         }
     }
     return result_matrix;
