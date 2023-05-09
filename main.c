@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <time.h>
+#include "matrixf_s.h"
 
 typedef struct layer_s {
     int layer_size;
@@ -59,7 +60,13 @@ void free_neural_network(neural_network_s *network) {
     free(network);
 }
 
-void cost(neural_network_s *network, )
+void cost(neural_network_s *network, dataset_s *dataset) {
+    matrixf_s *difference = matrix_subtract(network->layers[network->layers_count - 1]->neurons, dataset->expected_outputs);
+    matrixf_s *difference_squared = matrix_square_elements(difference);
+    network->cost = matrixf_column_sum(difference_squared, 0);
+    matrixf_free(difference);
+    matrixf_free(difference_squared);
+}
 
  neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     neural_network_s *network = malloc(sizeof(neural_network_s));
