@@ -69,8 +69,8 @@ matrixf_s *matrix_square_elements(const matrixf_s *matrix) {
     return result_matrix;
 }
 
-matrixf_s *split_matrix_column(const matrix_s *matrix, int n) {
-    matrix_s *result = generate_struct(matrix->rows, 1);
+matrixf_s *split_matrix_column(const matrixf_s *matrix, int n) {
+    matrixf_s *result = create_matrix(matrix->rows, 1);
     for (int i = 0; i < matrix->rows; i++) {
         result->tab[i][0] = matrix->tab[i][n];
     }

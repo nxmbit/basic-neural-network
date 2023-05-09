@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <time.h>
-#include "matrixf_s.h"
+#include "include/matrixf_s.h"
 
 typedef struct layer_s {
     int layer_size;
@@ -33,6 +33,7 @@ neural_network_s *create_neural_network(int layers_count, int *layers_sizes);
 void free_neural_network(neural_network_s *network);
 void free_layer(layer_s *layer);
 void initialize_biases(neural_network_s *network);
+double relu(double x);
 
 layer_s *create_layer(int layer_size, int next_layer_size) {
     layer_s *layer = malloc(sizeof(layer_s));
@@ -79,8 +80,6 @@ void cost(neural_network_s *network, dataset_s *dataset) {
     network->cost = 0;
     return network;
 }
-
-
 
 void initialize_weights(neural_network_s *network) {
     for (int i = 0; i < network->layers_count; i++) {
