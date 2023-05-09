@@ -4,12 +4,6 @@
 #include <math.h>
 #include <time.h>
 
-typedef struct matrixf_s {
-    double **tab;
-    int rows;
-    int cols;
-} matrixf_s;
-
 typedef struct layer_s {
     int layer_size;
     int next_layer_size;
@@ -32,11 +26,6 @@ typedef struct dataset_s {
 
 layer_s *create_layer(int layer_size, int next_layer_size);
 
-matrixf_s *create_matrix(int rows, int cols);
-matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
-void matrixf_free(matrixf_s *matrix);
-void matrixf_print(const matrixf_s *matrix, const char *message);
-matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
 void initialize_weights(neural_network_s *network);
 double gaussian_noise_generator(double mean, double std_deviation);
 neural_network_s *create_neural_network(int layers_count, int *layers_sizes);
@@ -84,47 +73,7 @@ void cost(neural_network_s *network, )
     return network;
 }
 
-matrixf_s *create_matrix(int rows, int cols) {
-    matrixf_s *matrix = malloc(sizeof(matrixf_s));
-    matrix->tab = malloc(rows * sizeof(double *));
-    for (int i = 0; i < rows; i++) {
-        matrix->tab[i] = malloc(cols * sizeof(double));
-    }
-    matrix->rows = rows;
-    matrix->cols = cols;
-    return matrix;
-}
 
-matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
-    if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
-        printf("Matrix addition is not possible!\n");
-    }
-    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_1->cols);
-
-    for (int i = 0; i < result_matrix->rows; i++) {
-        for (int j = 0; j < result_matrix->cols; j++) {
-            result_matrix->tab[i][j] = matrix_1->tab[i][j] + matrix_2->tab[i][j];
-        }
-    }
-    return result_matrix;
-}
-
-matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
-    if (matrix_1->cols != matrix_2->rows) {
-        printf("Matrix multiplication is not possible!\n");
-    }
-    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_2->cols);
-
-    for (int i = 0; i < matrix_1->rows; i++) {
-        for (int j = 0; j < matrix_2->cols; j++) {
-            result_matrix->tab[i][j] = 0;
-            for (int k = 0; k < matrix_1->cols; k++) {
-                result_matrix->tab[i][j] += (matrix_1->tab[i][k] * matrix_2->tab[k][j]);
-            }
-        }
-    }
-    return result_matrix;
-}
 
 void initialize_weights(neural_network_s *network) {
     for (int i = 0; i < network->layers_count; i++) {
@@ -163,25 +112,6 @@ void feed_forward(neural_network_s *network) {
         }
         matrixf_free(multiplication_result);
     }
-}
-
-void matrixf_free(matrixf_s *matrix) {
-    for (int i = 0; i < matrix->rows; i++) {
-        free(matrix->tab[i]);
-    }
-    free(matrix->tab);
-    free(matrix);
-}
-
-void matrixf_print(const matrixf_s *matrix, const char *message) {
-    printf("%s\n", message);
-    for (int i = 0; i < matrix->rows; i++) {
-        for (int j = 0; j < matrix->cols; j++) {
-            printf("%lf ", matrix->tab[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
 }
 
 double relu(double x) {
