@@ -69,6 +69,22 @@ matrixf_s *matrix_square_elements(const matrixf_s *matrix) {
     return result_matrix;
 }
 
+matrixf_s *split_matrix_column(const matrix_s *matrix, int n) {
+    matrix_s *result = generate_struct(matrix->rows, 1);
+    for (int i = 0; i < matrix->rows; i++) {
+        result->tab[i][0] = matrix->tab[i][n];
+    }
+    return result;
+}
+
+double matrixf_column_sum(const matrixf_s *matrix, int n) {
+    double sum = 0;
+    for (int i = 0; i < matrix->rows; i++) {
+        sum += matrix->tab[i][n];
+    }
+    return sum;
+}
+
 void matrixf_free(matrixf_s *matrix) {
     for (int i = 0; i < matrix->rows; i++) {
         free(matrix->tab[i]);
