@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include "include/matrixf_s.h"
+#include "include/activations.h"
 #include <string.h>
 
 typedef struct layer_s {
@@ -37,8 +38,6 @@ neural_network_s *create_neural_network(int layers_count, int *layers_sizes);
 void free_neural_network(neural_network_s *network);
 void free_layer(layer_s *layer);
 void initialize_biases(neural_network_s *network);
-double relu(double x);
-double d_relu (double x);
 void initialize_gradients(neural_network_s *network);
 void feed_forward(neural_network_s *network);
 void backpropagation(neural_network_s *network, dataset_s *dataset);
@@ -238,13 +237,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
     }
 }
 
-double relu(double x) {
-    return fmax(0, x);
-}
 
-double d_relu (double x) {
-    return x > 0 ? 1 : 0;
-}
 
 int main() {
     srand(time(NULL));
