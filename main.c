@@ -39,7 +39,7 @@ void free_layer(layer_s *layer);
 void initialize_biases(neural_network_s *network);
 void initialize_gradients(neural_network_s *network);
 void feed_forward(neural_network_s *network);
-void backpropagation(neural_network_s *network, dataset_s *dataset);
+void backpropagation(neural_network_s *network, dataset_s *dataset, int sample_index);
 double cost(neural_network_s *network, dataset_s *dataset, int sample_index);
 
 dataset_s *create_dataset(int input_neurons, int number_of_samples) {
@@ -190,13 +190,13 @@ void feed_forward(neural_network_s *network) {
 }
 
 
-void calculate_gradients(layer_s *prev_layer, layer_s *current_layer, dataset_s *dataset) {
+void calculate_gradients(layer_s *prev_layer, layer_s *current_layer, dataset_s *dataset, int sample_index) {
     double d_activation = 0;
     double d_cost_d_neuron = 0; //dc/da
 
     for (int i = 0; i < current_layer->layer_size; i++) {
         for (int j = 0; j < prev_layer->layer_size; j++) {
-            d_cost_d_neuron += 2 * (current_layer->neurons->tab[i][0] - dataset->expected_outputs->tab[i][0]); //zle
+            d_cost_d_neuron += 2 * (current_layer->neurons->tab[i][0] - dataset->expected_outputs->tab[sample_index][0]); //zle
             d_activation += d_relu(prev_layer->neurons->tab[j][0] * prev_layer->weights->tab[i][j] + prev_layer->biases->tab[i][0]); //???
 
             current_layer->weights_cost_gradient->tab[i][0] += d_cost_d_neuron * d_activation * prev_layer->neurons->tab[j][0];
@@ -207,9 +207,9 @@ void calculate_gradients(layer_s *prev_layer, layer_s *current_layer, dataset_s 
     }
 }
 
-void backpropagation(neural_network_s *network, dataset_s *dataset) {
+void backpropagation(neural_network_s *network, dataset_s *dataset, int sample_index) {
     for (int i = network->layers_count - 1; i > 0; i--) {
-        calculate_gradients(network->layers[i - 1], network->layers[i], dataset);
+        calculate_gradients(network->layers[i - 1], network->layers[i], dataset, sample_index);
     }
 }
 
@@ -232,7 +232,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
             feed_forward(network);
-            backpropagation(network, dataset);
+            backpropagation(network, dataset, sample_index);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network, dataset, sample_index);
         }
