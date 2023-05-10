@@ -237,8 +237,6 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
     }
 }
 
-
-
 int main() {
     srand(time(NULL));
 
