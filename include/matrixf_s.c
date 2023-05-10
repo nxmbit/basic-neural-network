@@ -44,6 +44,7 @@ matrixf_s *matrix_subtract(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
 matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
     if (matrix_1->cols != matrix_2->rows) {
         printf("Matrix multiplication is not possible!\n");
+        return NULL;
     }
     matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_2->cols);
 
