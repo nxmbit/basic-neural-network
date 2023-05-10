@@ -21,7 +21,6 @@ typedef struct neural_network_s {
     layer_s **layers;
     int layers_count;
     int *layers_sizes;
-    double cost;
 } neural_network_s;
 
 typedef struct dataset_s {
@@ -134,7 +133,6 @@ void free_neural_network(neural_network_s *network) {
             network->layers[i] = create_layer(layers_sizes[i], layers_sizes[i + 1]);
         }
     }
-    network->cost = 0;
     initialize_weights(network);
     initialize_biases(network);
     initialize_gradients(network);
@@ -228,15 +226,19 @@ void apply_gradients(neural_network_s *network, double learning_rate) {
 
 void network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate) {
     for (int epoch = 0; epoch < epochs; epoch++) {
+        double epoch_cost = 0;
         for (int sample_index = 0; sample_index < dataset->number_of_samples; sample_index++) {
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
+            feed_forward(network);
+            backpropagation(network, dataset);
+            apply_gradients(network, learning_rate);
+            epoch_cost += cost(network, dataset, sample_index);
         }
-        feed_forward(network);
-        //cost(network, dataset);
-        backpropagation(network, dataset);
-        apply_gradients(network, learning_rate);
+        epoch_cost /= (double) dataset->number_of_samples;
+        printf("Epoch: %d out of %d, cost: %lf\n", epoch + 1, epochs, epoch_cost);
+
     }
 }
 
@@ -246,7 +248,7 @@ double cost(neural_network_s *network, dataset_s *dataset, int sample_index) { /
         double error = network->layers[network->layers_count - 1]->neurons->tab[i][0] - dataset->expected_outputs->tab[sample_index][0];
         cost += (error * error);
     }
-    return cost;
+    return (cost / (double) network->layers_sizes[network->layers_count]);
 }
 
 int main() {
@@ -258,7 +260,7 @@ int main() {
     printf("\n");
     matrixf_print(dataset->expected_outputs, "dataset expected outputs");
     neural_network_s *network = create_neural_network(3, (int[]){10, 3, 2});
-    network_train(network, dataset, 2, 0.1);
+    network_train(network, dataset, 100, 0.1);
     printf("\n");
     matrixf_print(network->layers[0]->neurons, "first layer");
     free_dataset(dataset);
