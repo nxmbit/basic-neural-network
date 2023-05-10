@@ -41,6 +41,7 @@ void initialize_biases(neural_network_s *network);
 void initialize_gradients(neural_network_s *network);
 void feed_forward(neural_network_s *network);
 void backpropagation(neural_network_s *network, dataset_s *dataset);
+double cost(neural_network_s *network, dataset_s *dataset, int sample_index);
 
 dataset_s *create_dataset(int input_neurons, int number_of_samples) {
     dataset_s *dataset = malloc(sizeof(dataset_s));
@@ -118,7 +119,6 @@ void free_neural_network(neural_network_s *network) {
     matrixf_free(network->layers[network->layers_count - 1]->neurons);
     free(network->layers[network->layers_count - 1]);
     free(network->layers);
-    //free(network->layers_sizes);
     free(network);
 }
 
@@ -198,10 +198,8 @@ void calculate_gradients(layer_s *prev_layer, layer_s *current_layer, dataset_s 
 
     for (int i = 0; i < current_layer->layer_size; i++) {
         for (int j = 0; j < prev_layer->layer_size; j++) {
-            d_cost_d_neuron += 2 * (current_layer->neurons->tab[i][0] - dataset->expected_outputs->tab[i][0]);
-            double tmp = prev_layer->neurons->tab[j][0];
-            tmp *= prev_layer->weights->tab[i][j];
-            d_activation += d_relu(tmp+ prev_layer->biases->tab[i][0]); //???
+            d_cost_d_neuron += 2 * (current_layer->neurons->tab[i][0] - dataset->expected_outputs->tab[i][0]); //zle
+            d_activation += d_relu(prev_layer->neurons->tab[j][0] * prev_layer->weights->tab[i][j] + prev_layer->biases->tab[i][0]); //???
 
             current_layer->weights_cost_gradient->tab[i][0] += d_cost_d_neuron * d_activation * prev_layer->neurons->tab[j][0];
             current_layer->biases_cost_gradient->tab[i][0] += d_cost_d_neuron * d_activation;
@@ -230,11 +228,25 @@ void apply_gradients(neural_network_s *network, double learning_rate) {
 
 void network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate) {
     for (int epoch = 0; epoch < epochs; epoch++) {
+        for (int sample_index = 0; sample_index < dataset->number_of_samples; sample_index++) {
+            for (int i = 0; i < network->layers[0]->layer_size; i++) {
+                network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
+            }
+        }
         feed_forward(network);
         //cost(network, dataset);
         backpropagation(network, dataset);
         apply_gradients(network, learning_rate);
     }
+}
+
+double cost(neural_network_s *network, dataset_s *dataset, int sample_index) { //MSE
+    double cost = 0;
+    for (int i = 0; i < network->layers_sizes[network->layers_count - 1]; i++) {
+        double error = network->layers[network->layers_count - 1]->neurons->tab[i][0] - dataset->expected_outputs->tab[sample_index][0];
+        cost += (error * error);
+    }
+    return cost;
 }
 
 int main() {
@@ -247,7 +259,8 @@ int main() {
     matrixf_print(dataset->expected_outputs, "dataset expected outputs");
     neural_network_s *network = create_neural_network(3, (int[]){10, 3, 2});
     network_train(network, dataset, 2, 0.1);
-
+    printf("\n");
+    matrixf_print(network->layers[0]->neurons, "first layer");
     free_dataset(dataset);
     free_neural_network(network);
     return 0;
