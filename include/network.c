@@ -9,6 +9,7 @@ neural_network_s *create_neural_network(int layers_count, int *layers_sizes, int
     network->layers = malloc(layers_count * sizeof(layer_s));
     network->layers_count = layers_count;
     network->layers_sizes = layers_sizes;
+    network->expected_output_neurons = create_matrix(outputs, 1);
     for (int i = 0; i < layers_count; i++) {
         if (i == layers_count - 1) {
             network->layers[i] = create_layer(layers_sizes[i], 0);
@@ -48,6 +49,7 @@ void free_neural_network(neural_network_s *network) {
         free(network->layers[i]);
     }
     matrixf_free(network->layers[network->layers_count - 1]->neurons);
+    matrixf_free(network->expected_output_neurons);
     free(network->layers[network->layers_count - 1]);
     free(network->layers);
     free(network);

@@ -18,28 +18,31 @@ void feed_forward(neural_network_s *network) {
     }
 }
 
-void calculate_gradients(layer_s *prev_layer, layer_s *current_layer, dataset_s *dataset, int sample_index) {
+void backpropagation(neural_network_s *network) {
     double d_activation = 0;
-    double d_cost_d_neuron = 0; //dc/da
-//do poprawy
-    for (int i = 0; i < current_layer->layer_size; i++) {
-        for (int j = 0; j < prev_layer->layer_size; j++) {
-            d_cost_d_neuron += 2 * (current_layer->neurons->tab[i][0] - dataset->expected_outputs->tab[sample_index][0]); //zle
-            d_activation += d_relu(prev_layer->neurons->tab[j][0] * prev_layer->weights->tab[i][j] + prev_layer->biases->tab[i][0]); //???
+    double d_cost_d_neuron = 0;
 
-            current_layer->weights_cost_gradient->tab[i][0] += d_cost_d_neuron * d_activation * prev_layer->neurons->tab[j][0];
-            current_layer->biases_cost_gradient->tab[i][0] += d_cost_d_neuron * d_activation;
-        }
-        d_activation = 0;
-        d_cost_d_neuron = 0;
-    }
-}
-
-void backpropagation(neural_network_s *network, dataset_s *dataset, int sample_index) {
     for (int i = network->layers_count - 1; i > 0; i--) {
-        calculate_gradients(network->layers[i - 1], network->layers[i], dataset, sample_index);
+        if (i == network->layers_count - 1) {
+            for (int j = 0; j < network->layers[i]->layer_size; j++) {
+                d_cost_d_neuron = 2 * (network->layers[i]->neurons->tab[j][0] - network->expected_output_neurons->tab[j][0]);
+                printf("d_cost_d_neuron: %f\n", d_cost_d_neuron);
+                for (int k = 0; k < network->layers[i - 1]->layer_size; k++) {
+                    d_activation += d_relu(network->layers[i - 1]->neurons->tab[k][0] * network->layers[i - 1]->weights->tab[j][k] + network->layers[i - 1]->biases->tab[j][0]);
+                    network->layers[i]->weights_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation * network->layers[i - 1]->neurons->tab[k][0];
+                    network->layers[i]->biases_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation;
+                }
+                printf("d_activation: %f\n", d_activation);
+                d_cost_d_neuron = 0;
+                d_activation = 0;
+            }
+        } else {
+
+        }
+
     }
 }
+
 
 void apply_gradients(neural_network_s *network, double learning_rate) {
     for (int i = 0; i < network->layers_count; i++) {
@@ -52,6 +55,16 @@ void apply_gradients(neural_network_s *network, double learning_rate) {
     }
 }
 
+void set_expected_output_neurons(neural_network_s *network, dataset_s *dataset, int sample_index) {
+    for (int i = 0; i < network->expected_output_neurons->rows; i++) {
+        if (i == dataset->expected_outputs->tab[sample_index][0]) {
+            network->expected_output_neurons->tab[i][0] = 1;
+        } else {
+            network->expected_output_neurons->tab[i][0] = 0;
+        }
+    }
+}
+
 void network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate) {
     for (int epoch = 0; epoch < epochs; epoch++) {
         double epoch_cost = 0;
@@ -59,9 +72,11 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
-
+            printf("\n");
+            matrixf_print(network->layers[0]->neurons, "first layer");
+            set_expected_output_neurons(network, dataset, sample_index);
             feed_forward(network);
-            backpropagation(network, dataset, sample_index);
+            backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network, dataset, sample_index);
         }

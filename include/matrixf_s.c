@@ -80,6 +80,16 @@ matrixf_s *matrix_subtract_from_each_element(const matrixf_s *matrix, double val
     return result_matrix;
 }
 
+matrixf_s *matrix_transpose(const matrixf_s *matrix) {
+    matrixf_s *result_matrix = create_matrix(matrix->cols, matrix->rows);
+    for (int i = 0; i < result_matrix->rows; i++) {
+        for (int j = 0; j < result_matrix->cols; j++) {
+            result_matrix->tab[i][j] = matrix->tab[j][i];
+        }
+    }
+    return result_matrix;
+}
+
 matrixf_s *matrix_add_to_each_element(const matrixf_s *matrix, double value) {
     matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
     for (int i = 0; i < result_matrix->rows; i++) {
