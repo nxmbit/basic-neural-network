@@ -3,5 +3,5 @@ project(basic_neural_network C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(basic_neural_network main.c include/matrixf_s.c include/activations.c)
+add_executable(basic_neural_network main.c include/matrixf_s.c include/activations.c include/network.c include/dataset.c include/training.c)
 target_link_libraries(basic_neural_network m)
