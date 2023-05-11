@@ -74,7 +74,7 @@ dataset_s *load_data_csv(const char *path, int input_neurons, int number_of_samp
             token = strtok(NULL, ",");
             j++;
         }
-        if (i == 9) {
+        if (i == number_of_samples - 1) {
             break;
         }
         i++;
@@ -231,6 +231,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
+
             feed_forward(network);
             backpropagation(network, dataset, sample_index);
             apply_gradients(network, learning_rate);
@@ -254,13 +255,9 @@ double cost(neural_network_s *network, dataset_s *dataset, int sample_index) { /
 int main() {
     srand(time(NULL));
 
-    dataset_s *dataset = load_data_csv("file.csv", 10, 10);
-    printf("\n");
-    matrixf_print(dataset->inputs, "dataset inputs");
-    printf("\n");
-    matrixf_print(dataset->expected_outputs, "dataset expected outputs");
-    neural_network_s *network = create_neural_network(3, (int[]){10, 3, 2});
-    network_train(network, dataset, 100, 0.1);
+    dataset_s *dataset = load_data_csv("file.csv", 3, 70000);
+    neural_network_s *network = create_neural_network(3, (int[]){3, 3, 2,9});
+    network_train(network, dataset, 100, 0.001);
     printf("\n");
     matrixf_print(network->layers[0]->neurons, "first layer");
     free_dataset(dataset);
