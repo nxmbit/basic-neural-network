@@ -31,11 +31,10 @@ layer_s *create_layer(int layer_size, int next_layer_size) {
     if (next_layer_size != 0) {
         layer->weights = create_matrix(next_layer_size, layer_size);
         layer->biases = create_matrix(next_layer_size, 1);
+        layer->weights_cost_gradient = create_matrix(next_layer_size, 1);
+        layer->biases_cost_gradient = create_matrix(next_layer_size, 1);
+        layer->neurons_cost_gradient = create_matrix(next_layer_size, 1);
     }
-
-    layer->weights_cost_gradient = create_matrix(next_layer_size, 1);
-    layer->biases_cost_gradient = create_matrix(next_layer_size, 1);
-    layer->neurons_cost_gradient = create_matrix(next_layer_size, 1);
 
     return layer;
 }
@@ -56,7 +55,6 @@ void free_neural_network(neural_network_s *network) {
     free(network);
 }
 
-
 void initialize_weights(neural_network_s *network) {
     for (int i = 0; i < network->layers_count - 1; i++) {
         for (int j = 0; j < network->layers[i]->weights->rows; j++) {
@@ -76,7 +74,7 @@ void initialize_biases(neural_network_s * network) {
 }
 
 void initialize_gradients(neural_network_s *network) {
-    for (int i = 0; i < network->layers_count; i++) {
+    for (int i = 0; i < network->layers_count - 1; i++) {
         for (int j = 0; j < network->layers[i]->biases_cost_gradient->rows; j++) {
             network->layers[i]->biases_cost_gradient->tab[j][0] = 0;
             network->layers[i]->weights_cost_gradient->tab[j][0] = 0;
@@ -86,7 +84,6 @@ void initialize_gradients(neural_network_s *network) {
 }
 
 double gaussian_noise_generator(double mean, double std_deviation) {
-    srand48(time(NULL));
     double u1 = drand48();
     double u2 = drand48();
     //box muller transform

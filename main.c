@@ -10,9 +10,8 @@
 int main() {
     srand(time(NULL));
     dataset_s *dataset = load_data_csv("training_data.csv", 3, 70000);
-    neural_network_s *network = create_neural_network(4, (int[]){3, 3, 8,16}, 16);
-
-    network_train(network, dataset, 100, 0.001);
+    neural_network_s *network = create_neural_network(4, (int[]){3, 8, 12,16}, 16);
+    network_train(network, dataset, 10, 0.02);
     printf("\n");
     matrixf_print(network->layers[0]->neurons, "first layer");
     free_dataset(dataset);
