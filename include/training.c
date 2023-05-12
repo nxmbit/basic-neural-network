@@ -26,19 +26,18 @@ void backpropagation(neural_network_s *network) {
         if (i == network->layers_count - 1) {
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
                 d_cost_d_neuron = 2 * (network->layers[i]->neurons->tab[j][0] - network->expected_output_neurons->tab[j][0]);
-                printf("d_cost_d_neuron: %f\n", d_cost_d_neuron);
+                //printf("d_cost_d_neuron: %f\n", d_cost_d_neuron);
                 for (int k = 0; k < network->layers[i - 1]->layer_size; k++) {
                     d_activation += d_relu(network->layers[i - 1]->neurons->tab[k][0] * network->layers[i - 1]->weights->tab[j][k] + network->layers[i - 1]->biases->tab[j][0]);
-                    network->layers[i]->weights_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation * network->layers[i - 1]->neurons->tab[k][0];
-                    network->layers[i]->biases_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation;
+                    network->layers[i - 1]->weights_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation * network->layers[i - 1]->neurons->tab[k][0];
+                    network->layers[i - 1]->biases_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation;
                 }
-                printf("d_activation: %f\n", d_activation);
+                //printf("d_activation: %f\n", d_activation);
                 d_cost_d_neuron = 0;
                 d_activation = 0;
             }
         } else {
-
-                d_activation = 0;
+                //Backpropagate errors to neurons
             }
         }
 
@@ -73,15 +72,15 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
-            printf("\n");
-            matrixf_print(network->layers[0]->neurons, "first layer");
+            //printf("\n");
+            //matrixf_print(network->layers[0]->neurons, "first layer");
             set_expected_output_neurons(network, dataset, sample_index);
             feed_forward(network);
             backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network);
         }
-        epoch_cost /= (double) dataset->number_of_samples;
+        epoch_cost /= (double) network->expected_output_neurons->rows;
         printf("Epoch: %d out of %d, cost: %lf\n", epoch + 1, epochs, epoch_cost);
 
     }

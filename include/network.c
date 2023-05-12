@@ -33,8 +33,9 @@ layer_s *create_layer(int layer_size, int next_layer_size) {
         layer->biases = create_matrix(next_layer_size, 1);
     }
 
-    layer->weights_cost_gradient = create_matrix(layer_size, 1);
-    layer->biases_cost_gradient = create_matrix(layer_size, 1);
+    layer->weights_cost_gradient = create_matrix(next_layer_size, 1);
+    layer->biases_cost_gradient = create_matrix(next_layer_size, 1);
+    layer->neurons_cost_gradient = create_matrix(next_layer_size, 1);
 
     return layer;
 }
@@ -79,6 +80,7 @@ void initialize_gradients(neural_network_s *network) {
         for (int j = 0; j < network->layers[i]->biases_cost_gradient->rows; j++) {
             network->layers[i]->biases_cost_gradient->tab[j][0] = 0;
             network->layers[i]->weights_cost_gradient->tab[j][0] = 0;
+            network->layers[i]->neurons_cost_gradient->tab[j][0] = 0;
         }
     }
 }
