@@ -38,9 +38,10 @@ void backpropagation(neural_network_s *network) {
             }
         } else {
 
+                d_activation = 0;
+            }
         }
 
-    }
 }
 
 
@@ -78,7 +79,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             feed_forward(network);
             backpropagation(network);
             apply_gradients(network, learning_rate);
-            epoch_cost += cost(network, dataset, sample_index);
+            epoch_cost += cost(network);
         }
         epoch_cost /= (double) dataset->number_of_samples;
         printf("Epoch: %d out of %d, cost: %lf\n", epoch + 1, epochs, epoch_cost);
@@ -86,10 +87,10 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
     }
 }
 
-double cost(neural_network_s *network, dataset_s *dataset, int sample_index) { //MSE
+double cost(neural_network_s *network) { //MSE
     double cost = 0;
     for (int i = 0; i < network->layers_sizes[network->layers_count - 1]; i++) {
-        double error = network->layers[network->layers_count - 1]->neurons->tab[i][0] - dataset->expected_outputs->tab[sample_index][0];
+        double error = network->layers[network->layers_count - 1]->neurons->tab[i][0] - network->expected_output_neurons->tab[i][0];
         cost += (error * error);
     }
     return (cost / (double) network->layers_sizes[network->layers_count]);
