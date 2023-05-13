@@ -19,50 +19,49 @@ void feed_forward(neural_network_s *network) {
 }
 
 void backpropagation(neural_network_s *network) {
-    double d_activation = 0;
-    double d_cost_d_neuron = 0;
-
     for (int i = network->layers_count - 1; i > 0; i--) {
+        double error = 0;
+        matrixf_s *multiplication_result; //neuron *weight
+        matrixf_s *multiplication_result_2; // weight * delta
+        matrixf_s *trans;
         if (i == network->layers_count - 1) {
-            for (int j = 0; j < network->layers[i]->layer_size; j++) {
-                d_cost_d_neuron = 2 * (network->layers[i]->neurons->tab[j][0] - network->expected_output_neurons->tab[j][0]);
-                d_activation = d_sigmoid(network->layers[i]->neurons->tab[j][0]);
-                for (int k = 0; k < network->layers[i - 1]->layer_size; k++) {
-                    network->layers[i - 1]->weights_cost_gradient->tab[k][j] += d_cost_d_neuron * d_activation * network->layers[i - 1]->neurons->tab[k][0];
-                    network->layers[i - 1]->biases_cost_gradient->tab[j][0] += d_cost_d_neuron * d_activation;
-                }
-            }
+            network->layers[i - 1]->neurons_delta = matrix_subtract(network->layers[i]->neurons,network->expected_output_neurons);
         } else {
+            multiplication_result = matrix_multiply(network->layers[i]->weights, network->layers[i]->neurons);
+            //printf("i: %d\n",i);
+            trans = matrix_transpose(network->layers[i]->weights);
+            multiplication_result_2 = matrix_multiply(trans, network->layers[i]->neurons_delta); // wg gpt4 poprawne
+            matrixf_s *temp_neurons = matrix_add(multiplication_result, network->layers[i]->biases);
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
-                double sum = 0;
-                for (int k = 0; k < network->layers[i + 1]->layer_size; k++) {
-                    double next_layer_neuron_cost_gradient = 0;
-                    if (i == network->layers_count - 2) {
-                        next_layer_neuron_cost_gradient = network->layers[i]->weights_cost_gradient->tab[k][0];
-                    } else {
-                        next_layer_neuron_cost_gradient = network->layers[i]->neurons_cost_gradient->tab[k][0];
-                    }
-                    double weight = network->layers[i]->weights->tab[j][k];
-                    sum += next_layer_neuron_cost_gradient * weight;
-                }
-                network->layers[i]->neurons_cost_gradient->tab[j][0] = sum;
+                error = multiplication_result_2->tab[j][0];
+                network->layers[i - 1]->neurons_delta->tab[j][0] = d_sigmoid(temp_neurons->tab[j][0]) * error;
 
-                for (int k = 0; k < network->layers[i - 1]->layer_size; k++) {
-                    d_activation = d_sigmoid(network->layers[i - 1]->neurons->tab[k][0]);
-                    network->layers[i - 1]->weights_cost_gradient->tab[k][0] += sum * d_activation * network->layers[i - 1]->neurons->tab[k][0];
-                    network->layers[i - 1]->biases_cost_gradient->tab[j][0] += sum * d_activation;
-                }
             }
+            matrixf_free(multiplication_result);
+            matrixf_free(multiplication_result_2);
+            matrixf_free(temp_neurons);
+            matrixf_free(trans);
         }
+    }
+
+    for (int i = 0; i < network->layers_count - 1; i++) {
+        matrixf_s *trans = matrix_transpose(network->layers[i]->neurons);
+        matrixf_s *multiplication_result = matrix_multiply(network->layers[i]->neurons_delta, trans);
+        matrix_copy(network->layers[i]->biases_gradient, network->layers[i]->neurons_delta);
+        matrix_copy(network->layers[i]->weights_gradient, multiplication_result);
+        //network->layers[i]->biases_gradient = network->layers[i]->neurons_delta; //pozniej to sprobuj zmienic
+        //network->layers[i]->weights_gradient = matrix_multiply(network->layers[i]->neurons_delta, trans);
+        matrixf_free(trans);
+        matrixf_free(multiplication_result);
     }
 }
 
 void apply_gradients(neural_network_s *network, double learning_rate) {
-    for (int i = 0; i < network->layers_count; i++) {
+    for (int i = 0; i < network->layers_count - 1; i++) {
         for (int j = 0; j < network->layers[i]->next_layer_size; j++) {
-            network->layers[i]->biases->tab[j][0] -= learning_rate * network->layers[i]->biases_cost_gradient->tab[j][0];
+            network->layers[i]->biases->tab[j][0] -= learning_rate * network->layers[i]->biases_gradient->tab[j][0];
             for (int k = 0; k < network->layers[i]->weights->cols; k++) {
-                network->layers[i]->weights->tab[j][k] -= learning_rate * network->layers[i]->weights_cost_gradient->tab[j][k];
+                network->layers[i]->weights->tab[j][k] -= learning_rate * network->layers[i]->weights_gradient->tab[j][k];
             }
         }
     }
@@ -87,9 +86,8 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             }
 
             set_expected_output_neurons(network, dataset, sample_index);
-
             feed_forward(network);
-
+            /*
             printf("\n");
             matrixf_print(network->layers[network->layers_count - 1]->neurons, "last layer");
             printf("\n");
@@ -102,11 +100,12 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             if (sample_index == 4) {
                 break;
             }
+             */
             backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network);
         }
-        epoch_cost /= (double) network->expected_output_neurons->rows;
+        epoch_cost /= (double) dataset->number_of_samples;
         printf("Epoch: %d out of %d, cost: %lf\n", epoch + 1, epochs, epoch_cost);
 
     }
@@ -118,5 +117,5 @@ double cost(neural_network_s *network) { //MSE
         double error = network->layers[network->layers_count - 1]->neurons->tab[i][0] - network->expected_output_neurons->tab[i][0];
         cost += (error * error);
     }
-    return (cost / (double) network->layers_sizes[network->layers_count]);
+    return (cost / (double) network->layers_sizes[network->layers_count - 1]);
 }

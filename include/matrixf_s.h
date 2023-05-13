@@ -18,6 +18,7 @@ matrixf_s *matrix_subtract_from_each_element(const matrixf_s *matrix, double val
 double matrixf_column_sum(const matrixf_s *matrix, int n);
 void matrixf_free(matrixf_s *matrix);
 void matrixf_print(const matrixf_s *matrix, const char *message);
+void *matrix_copy(matrixf_s *dest, const matrixf_s *src);
 matrixf_s *matrix_transpose(const matrixf_s *matrix);
 
 #endif

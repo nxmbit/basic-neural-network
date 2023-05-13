@@ -108,6 +108,14 @@ matrixf_s *split_matrix_column(const matrixf_s *matrix, int n) {
     return result;
 }
 
+void *matrix_copy(matrixf_s *dest, const matrixf_s *src) {
+    for (int i = 0; i < src->rows; i++) {
+        for (int j = 0; j < src->cols; j++) {
+            dest->tab[i][j] = src->tab[i][j];
+        }
+    }
+}
+
 double matrixf_column_sum(const matrixf_s *matrix, int n) {
     double sum = 0;
     for (int i = 0; i < matrix->rows; i++) {
@@ -134,3 +142,4 @@ void matrixf_print(const matrixf_s *matrix, const char *message) {
     }
     printf("\n");
 }
+

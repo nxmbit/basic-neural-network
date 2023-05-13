@@ -31,9 +31,9 @@ layer_s *create_layer(int layer_size, int next_layer_size) {
     if (next_layer_size != 0) {
         layer->weights = create_matrix(next_layer_size, layer_size);
         layer->biases = create_matrix(next_layer_size, 1);
-        layer->weights_cost_gradient = create_matrix(next_layer_size, 1);
-        layer->biases_cost_gradient = create_matrix(next_layer_size, 1);
-        layer->neurons_cost_gradient = create_matrix(next_layer_size, 1);
+        layer->weights_gradient = create_matrix(next_layer_size, layer_size);
+        layer->biases_gradient = create_matrix(next_layer_size, 1);
+        layer->neurons_delta = create_matrix(next_layer_size, 1);
     }
 
     return layer;
@@ -44,8 +44,8 @@ void free_neural_network(neural_network_s *network) {
         matrixf_free(network->layers[i]->neurons);
         matrixf_free(network->layers[i]->weights);
         matrixf_free(network->layers[i]->biases);
-        matrixf_free(network->layers[i]->weights_cost_gradient);
-        matrixf_free(network->layers[i]->biases_cost_gradient);
+        matrixf_free(network->layers[i]->weights_gradient);
+        matrixf_free(network->layers[i]->biases_gradient);
         free(network->layers[i]);
     }
     matrixf_free(network->layers[network->layers_count - 1]->neurons);
@@ -75,10 +75,12 @@ void initialize_biases(neural_network_s * network) {
 
 void initialize_gradients(neural_network_s *network) {
     for (int i = 0; i < network->layers_count - 1; i++) {
-        for (int j = 0; j < network->layers[i]->biases_cost_gradient->rows; j++) {
-            network->layers[i]->biases_cost_gradient->tab[j][0] = 0;
-            network->layers[i]->weights_cost_gradient->tab[j][0] = 0;
-            network->layers[i]->neurons_cost_gradient->tab[j][0] = 0;
+        for (int j = 0; j < network->layers[i]->biases_gradient->rows; j++) {
+            network->layers[i]->biases_gradient->tab[j][0] = 0;
+            network->layers[i]->neurons_delta->tab[j][0] = 0;
+            for (int k = 0; k < network->layers[i]->weights_gradient->cols; k++) {
+                network->layers[i]->weights_gradient->tab[j][k] = 0;
+            }
         }
     }
 }

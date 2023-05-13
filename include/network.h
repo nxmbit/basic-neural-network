@@ -9,9 +9,9 @@ typedef struct layer_s {
     matrixf_s *neurons;
     matrixf_s *weights;
     matrixf_s *biases;
-    matrixf_s *weights_cost_gradient;
-    matrixf_s *biases_cost_gradient;
-    matrixf_s *neurons_cost_gradient;
+    matrixf_s *weights_gradient;
+    matrixf_s *biases_gradient;
+    matrixf_s *neurons_delta;
 } layer_s;
 
 typedef struct neural_network_s {
