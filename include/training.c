@@ -28,14 +28,17 @@ void backpropagation(neural_network_s *network) {
         matrixf_s *temp_neurons;
         if (i == network->layers_count - 1) {
             subtraction_result = matrix_subtract(network->layers[i]->neurons,network->expected_output_neurons);
+            for (int j = 0; j < network->layers[i]->layer_size; j++) {
+                error = subtraction_result->tab[j][0];
+                subtraction_result->tab[j][0] = d_sigmoid(network->layers[i]->neurons->tab[j][0]) * error;
+            }
             matrix_copy(network->layers[i - 1]->neurons_delta, subtraction_result);
-            //network->layers[i - 1]->neurons_delta = matrix_subtract(network->layers[i]->neurons,network->expected_output_neurons);
             matrixf_free(subtraction_result);
         } else {
             multiplication_result = matrix_multiply(network->layers[i]->weights, network->layers[i]->neurons);
             //printf("i: %d\n",i);
             trans = matrix_transpose(network->layers[i]->weights);
-            multiplication_result_2 = matrix_multiply(trans, network->layers[i]->neurons_delta); // wg gpt4 poprawne
+            multiplication_result_2 = matrix_multiply(trans, network->layers[i]->neurons_delta);
             temp_neurons = matrix_add(multiplication_result, network->layers[i]->biases);
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
                 error = multiplication_result_2->tab[j][0];
@@ -54,12 +57,12 @@ void backpropagation(neural_network_s *network) {
         matrixf_s *multiplication_result = matrix_multiply(network->layers[i]->neurons_delta, trans);
         matrix_copy(network->layers[i]->biases_gradient, network->layers[i]->neurons_delta);
         matrix_copy(network->layers[i]->weights_gradient, multiplication_result);
-        //network->layers[i]->biases_gradient = network->layers[i]->neurons_delta; //pozniej to sprobuj zmienic
-        //network->layers[i]->weights_gradient = matrix_multiply(network->layers[i]->neurons_delta, trans);
         matrixf_free(trans);
         matrixf_free(multiplication_result);
     }
 }
+
+
 
 void apply_gradients(neural_network_s *network, double learning_rate) {
     for (int i = 0; i < network->layers_count - 1; i++) {
@@ -89,23 +92,8 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
             }
-
             set_expected_output_neurons(network, dataset, sample_index);
             feed_forward(network);
-            /*
-            printf("\n");
-            matrixf_print(network->layers[network->layers_count - 1]->neurons, "last layer");
-            printf("\n");
-            matrixf_print(network->layers[network->layers_count - 2]->neurons, "3 layer");
-            printf("\n");
-            matrixf_print(network->layers[network->layers_count - 3]->neurons, "2 layer");
-            printf("\n");
-            matrixf_print(network->layers[network->layers_count - 4]->neurons, "first layer");
-
-            if (sample_index == 4) {
-                break;
-            }
-             */
             backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network);

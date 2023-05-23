@@ -9,9 +9,9 @@ double d_relu (double x) {
 }
 
 double sigmoid(double x) {
-    return 1 / (1 + exp(-x));
+    return 1.0 / (1.0 + exp(-x));
 }
 
 double d_sigmoid(double x) {
-    return sigmoid(x) * (1 - sigmoid(x));
+    return sigmoid(x) * (1.0 - sigmoid(x));
 }

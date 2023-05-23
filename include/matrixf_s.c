@@ -100,6 +100,16 @@ matrixf_s *matrix_add_to_each_element(const matrixf_s *matrix, double value) {
     return result_matrix;
 }
 
+matrixf_s *matrix_multiply_scalar(const matrixf_s *matrix, double value) {
+    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+    for (int i = 0; i < result_matrix->rows; i++) {
+        for (int j = 0; j < result_matrix->cols; j++) {
+            result_matrix->tab[i][j] = matrix->tab[i][j] * value;
+        }
+    }
+    return result_matrix;
+}
+
 matrixf_s *split_matrix_column(const matrixf_s *matrix, int n) {
     matrixf_s *result = create_matrix(matrix->rows, 1);
     for (int i = 0; i < matrix->rows; i++) {
