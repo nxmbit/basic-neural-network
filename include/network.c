@@ -1,6 +1,8 @@
 #include "matrixf_s.h"
 #include "network.h"
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <math.h>
 #include <time.h>
 
@@ -93,4 +95,17 @@ double gaussian_noise_generator(double mean, double std_deviation) {
     return (std_deviation * z0) + mean;
 }
 
+void save_model(neural_network_s *network, const char *path) {
+    FILE *file = fopen(path, "w");
+    fprintf(file, "%d\n\n", network->layers_count);
 
+    for (int i = 0; i < network->layers_count; i++) {
+        if (i != network->layers_count - 1) {
+            fprintf(file, "%d,", network->layers_sizes[i]);
+        } else {
+            fprintf(file, "%d\n\n", network->layers_sizes[i]);
+        }
+    }
+
+    fclose(file);
+}

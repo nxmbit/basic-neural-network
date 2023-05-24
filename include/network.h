@@ -28,5 +28,6 @@ void free_neural_network(neural_network_s *network);
 void initialize_biases(neural_network_s *network);
 void initialize_gradients(neural_network_s *network);
 double gaussian_noise_generator(double mean, double std_deviation);
+void save_model(neural_network_s *network, const char *path);
 
 #endif

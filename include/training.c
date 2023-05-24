@@ -88,6 +88,7 @@ void set_expected_output_neurons(neural_network_s *network, dataset_s *dataset, 
 void network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate) {
     for (int epoch = 0; epoch < epochs; epoch++) {
         double epoch_cost = 0;
+        double epoch_success_rate = 0;
         for (int sample_index = 0; sample_index < dataset->number_of_samples; sample_index++) {
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
@@ -97,11 +98,27 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network);
+            epoch_success_rate += success_rate(network);
         }
         epoch_cost /= (double) dataset->number_of_samples;
-        printf("Epoch: %d out of %d, cost: %lf\n", epoch + 1, epochs, epoch_cost);
+        epoch_success_rate /= (double) dataset->number_of_samples;
+        printf("Epoch: %d out of %d, cost: %lf, success rate: %lf\n", epoch + 1, epochs, epoch_cost, epoch_success_rate);
 
     }
+}
+
+double success_rate(neural_network_s *network) {
+    double success = 0;
+    int max_index = 0;
+    for (int i = 0; i < network->layers[network->layers_count - 1]->layer_size; i++) {
+        if (network->layers[network->layers_count - 1]->neurons->tab[i][0] > network->layers[network->layers_count - 1]->neurons->tab[max_index][0]) {
+            max_index = i;
+        }
+    }
+    if (network->layers[network->layers_count - 1]->neurons->tab[max_index][0] > 0.8) {
+        success = 1;
+    }
+    return success;
 }
 
 double cost(neural_network_s *network) { //MSE
