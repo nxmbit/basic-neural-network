@@ -23,3 +23,11 @@ double tanh(double x) {
 double d_tanh(double x) {
     return 1.0 - pow(tanh(x), 2);
 }
+
+double leaky_relu(double x, double slope) {
+    return x > 0 ? x : x * slope;
+}
+
+double d_leaky_relu(double x, double slope) {
+    return x > 0 ? 1 : slope;
+}

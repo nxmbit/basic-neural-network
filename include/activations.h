@@ -7,5 +7,7 @@ double sigmoid(double x);
 double d_sigmoid(double x);
 double tanh(double x);
 double d_tanh(double x);
+double leaky_relu(double x, double slope);
+double d_leaky_relu(double x, double slope);
 
 #endif
