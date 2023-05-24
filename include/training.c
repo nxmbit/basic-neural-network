@@ -26,20 +26,19 @@ void backpropagation(neural_network_s *network) {
         matrixf_s *subtraction_result;
         matrixf_s *trans;
         matrixf_s *temp_neurons;
+        multiplication_result = matrix_multiply(network->layers[i - 1]->weights, network->layers[i - 1]->neurons);
+        temp_neurons = matrix_add(multiplication_result, network->layers[i - 1]->biases);
         if (i == network->layers_count - 1) {
             subtraction_result = matrix_subtract(network->layers[i]->neurons,network->expected_output_neurons);
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
                 error = subtraction_result->tab[j][0];
-                subtraction_result->tab[j][0] = d_sigmoid(network->layers[i]->neurons->tab[j][0]) * error;
+                subtraction_result->tab[j][0] = d_sigmoid(temp_neurons->tab[j][0]) * error;
             }
             matrix_copy(network->layers[i - 1]->neurons_delta, subtraction_result);
             matrixf_free(subtraction_result);
         } else {
-            multiplication_result = matrix_multiply(network->layers[i]->weights, network->layers[i]->neurons);
-            //printf("i: %d\n",i);
             trans = matrix_transpose(network->layers[i]->weights);
             multiplication_result_2 = matrix_multiply(trans, network->layers[i]->neurons_delta);
-            temp_neurons = matrix_add(multiplication_result, network->layers[i]->biases);
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
                 error = multiplication_result_2->tab[j][0];
                 network->layers[i - 1]->neurons_delta->tab[j][0] = d_sigmoid(temp_neurons->tab[j][0]) * error;

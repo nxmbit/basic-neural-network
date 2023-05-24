@@ -15,3 +15,4 @@ double sigmoid(double x) {
 double d_sigmoid(double x) {
     return sigmoid(x) * (1.0 - sigmoid(x));
 }
+
