@@ -16,3 +16,10 @@ double d_sigmoid(double x) {
     return sigmoid(x) * (1.0 - sigmoid(x));
 }
 
+double tanh(double x) {
+    return (exp(x) - exp(-x)) / (exp(x) + exp(-x));
+}
+
+double d_tanh(double x) {
+    return 1.0 - pow(tanh(x), 2);
+}
