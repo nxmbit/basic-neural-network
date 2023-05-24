@@ -6,12 +6,12 @@
 #include <math.h>
 #include <time.h>
 
-neural_network_s *create_neural_network(int layers_count, int *layers_sizes, int outputs) {
+neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     neural_network_s *network = malloc(sizeof(neural_network_s));
     network->layers = malloc(layers_count * sizeof(layer_s));
     network->layers_count = layers_count;
     network->layers_sizes = layers_sizes;
-    network->expected_output_neurons = create_matrix(outputs, 1);
+    network->expected_output_neurons = create_matrix(layers_sizes[layers_count - 1], 1);
     for (int i = 0; i < layers_count; i++) {
         if (i == layers_count - 1) {
             network->layers[i] = create_layer(layers_sizes[i], 0);
@@ -97,15 +97,57 @@ double gaussian_noise_generator(double mean, double std_deviation) {
 
 void save_model(neural_network_s *network, const char *path) {
     FILE *file = fopen(path, "w");
-    fprintf(file, "%d\n\n", network->layers_count);
-
+    if (file == NULL) {
+        printf("Error while opening file %s\n", path);
+        exit(1);
+    }
+    fprintf(file, "%d\n", network->layers_count);
     for (int i = 0; i < network->layers_count; i++) {
-        if (i != network->layers_count - 1) {
-            fprintf(file, "%d,", network->layers_sizes[i]);
-        } else {
-            fprintf(file, "%d\n\n", network->layers_sizes[i]);
+        fprintf(file, "%d\n", network->layers_sizes[i]);
+    }
+    for (int i = 0; i < network->layers_count - 1; i++) {
+        for (int j = 0; j < network->layers[i]->weights->rows; j++) {
+            for (int k = 0; k < network->layers[i]->weights->cols; k++) {
+                fprintf(file, "%f\n", network->layers[i]->weights->tab[j][k]);
+            }
         }
     }
-
+    for (int i = 0; i < network->layers_count - 1; i++) {
+        for (int j = 0; j < network->layers[i]->biases->rows; j++) {
+            fprintf(file, "%f\n", network->layers[i]->biases->tab[j][0]);
+        }
+    }
     fclose(file);
+}
+
+neural_network_s *load_model(const char *path) {
+    neural_network_s *network;
+    FILE *file = fopen(path, "r");
+    if (file == NULL) {
+        printf("Error while opening file %s\n", path);
+        exit(1);
+    }
+
+    int layers_count = 0;
+    fscanf(file, "%d\n", &layers_count);
+    int *layers_sizes = malloc(layers_count * sizeof(int));
+    for (int i = 0; i < layers_count; i++) {
+        fscanf(file, "%d\n", &layers_sizes[i]);
+    }
+    network = create_neural_network(layers_count, layers_sizes);
+
+    for (int i = 0; i < network->layers_count - 1; i++) {
+        for (int j = 0; j < network->layers[i]->weights->rows; j++) {
+            for (int k = 0; k < network->layers[i]->weights->cols; k++) {
+                fscanf(file, "%lf\n", &network->layers[i]->weights->tab[j][k]);
+            }
+        }
+    }
+    for (int i = 0; i < network->layers_count - 1; i++) {
+        for (int j = 0; j < network->layers[i]->biases->rows; j++) {
+            fscanf(file, "%lf\n", &network->layers[i]->biases->tab[j][0]);
+        }
+    }
+    fclose(file);
+    return network;
 }

@@ -23,11 +23,12 @@ typedef struct neural_network_s {
 
 layer_s *create_layer(int layer_size, int next_layer_size);
 void initialize_weights(neural_network_s *network);
-neural_network_s *create_neural_network(int layers_count, int *layers_sizes, int outputs);
+neural_network_s *create_neural_network(int layers_count, int *layers_sizes);
 void free_neural_network(neural_network_s *network);
 void initialize_biases(neural_network_s *network);
 void initialize_gradients(neural_network_s *network);
 double gaussian_noise_generator(double mean, double std_deviation);
 void save_model(neural_network_s *network, const char *path);
+neural_network_s *load_model(const char *path);
 
 #endif
