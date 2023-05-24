@@ -21,7 +21,7 @@ void feed_forward(neural_network_s *network) {
 void backpropagation(neural_network_s *network) {
     for (int i = network->layers_count - 1; i > 0; i--) {
         double error = 0;
-        matrixf_s *multiplication_result; //neuron *weight
+        matrixf_s *multiplication_result; //neuron * weight
         matrixf_s *multiplication_result_2; // weight * delta
         matrixf_s *subtraction_result;
         matrixf_s *trans;
@@ -36,6 +36,8 @@ void backpropagation(neural_network_s *network) {
             }
             matrix_copy(network->layers[i - 1]->neurons_delta, subtraction_result);
             matrixf_free(subtraction_result);
+            matrixf_free(multiplication_result);
+            matrixf_free(temp_neurons);
         } else {
             trans = matrix_transpose(network->layers[i]->weights);
             multiplication_result_2 = matrix_multiply(trans, network->layers[i]->neurons_delta);
@@ -60,8 +62,6 @@ void backpropagation(neural_network_s *network) {
         matrixf_free(multiplication_result);
     }
 }
-
-
 
 void apply_gradients(neural_network_s *network, double learning_rate) {
     for (int i = 0; i < network->layers_count - 1; i++) {
@@ -97,7 +97,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
             backpropagation(network);
             apply_gradients(network, learning_rate);
             epoch_cost += cost(network);
-            epoch_success_rate += success_rate(network);
+            epoch_success_rate += success_rate(network, sample_index, dataset);
         }
         epoch_cost /= (double) dataset->number_of_samples;
         epoch_success_rate /= (double) dataset->number_of_samples;
@@ -106,7 +106,7 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
     }
 }
 
-double success_rate(neural_network_s *network) {
+double success_rate(neural_network_s *network, int sample_index, dataset_s *dataset) {
     double success = 0;
     int max_index = 0;
     for (int i = 0; i < network->layers[network->layers_count - 1]->layer_size; i++) {
@@ -114,7 +114,7 @@ double success_rate(neural_network_s *network) {
             max_index = i;
         }
     }
-    if (network->layers[network->layers_count - 1]->neurons->tab[max_index][0] > 0.8) {
+    if (max_index == dataset->expected_outputs->tab[sample_index][0]) {
         success = 1;
     }
     return success;
