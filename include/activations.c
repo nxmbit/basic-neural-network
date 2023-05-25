@@ -47,3 +47,19 @@ double d_softmax(double x, double **tab, int size) {
     }
     return (sum * exp(x) - exp(x) * exp(x)) / (sum * sum);
 }
+
+double elu(double x, double alpha) {
+    return x > 0 ? x : alpha * (exp(x) - 1);
+}
+
+double d_elu(double x, double alpha) {
+    return x > 0 ? 1 : elu(x, alpha) + alpha;
+}
+
+double swish(double x, double beta) {
+    return x * sigmoid(beta * x);
+}
+
+double d_swish(double x, double beta) {
+    return swish(x, beta) + sigmoid(beta * x) * (1 - swish(x, beta));
+}

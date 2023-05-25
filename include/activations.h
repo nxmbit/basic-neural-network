@@ -11,5 +11,9 @@ double leaky_relu(double x, double slope);
 double d_leaky_relu(double x, double slope);
 double softmax(double x, double **tab, int size);
 double d_softmax(double x, double **tab, int size);
+double elu(double x, double alpha);
+double d_elu(double x, double alpha);
+double swish(double x, double beta);
+double d_swish(double x, double beta);
 
 #endif
