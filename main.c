@@ -9,13 +9,13 @@
 
 int main() {
     srand(time(NULL));
-    dataset_s *dataset = load_data_csv("training_data.csv", 3, 60000);
-    neural_network_s *network = create_neural_network(4, (int[]){3,6, 12,16});
+    dataset_s *dataset = load_data_csv("training_data.csv", 3, 70000);
+    neural_network_s *network = create_neural_network(4, (int[]){3,10,16, 20,16});
     //neural_network_s *network = load_model("model.txt");
-    network_train(network, dataset, 10000, 0.1);
+    network_train(network, dataset, 400, 0.1);
     save_model(network, "model.txt");
-    printf("\n");
-    matrixf_print(network->layers[0]->neurons, "first layer");
+    result(network);
+    matrixf_print(network->layers[network->layers_count - 1]->neurons, "last layer");
     free_dataset(dataset);
     free_neural_network(network);
     return 0;
