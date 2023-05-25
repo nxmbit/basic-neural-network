@@ -11,7 +11,11 @@ void feed_forward(neural_network_s *network) {
         multiplication_result = matrix_multiply(network->layers[i]->weights, network->layers[i]->neurons);
         matrixf_s *temp_neurons = matrix_add(multiplication_result, network->layers[i]->biases);
         for (int j = 0; j < network->layers[i + 1]->layer_size; j++) {
-            network->layers[i + 1]->neurons->tab[j][0] = sigmoid(temp_neurons->tab[j][0]);
+            if (i == network->layers_count - 2) {
+                network->layers[i + 1]->neurons->tab[j][0] = softmax(temp_neurons->tab[j][0], temp_neurons->tab, network->layers[i + 1]->layer_size);
+            } else {
+                network->layers[i + 1]->neurons->tab[j][0] = sigmoid(temp_neurons->tab[j][0]);
+            }
         }
         matrixf_free(multiplication_result);
         matrixf_free(temp_neurons);
@@ -32,7 +36,7 @@ void backpropagation(neural_network_s *network) {
             subtraction_result = matrix_subtract(network->layers[i]->neurons,network->expected_output_neurons);
             for (int j = 0; j < network->layers[i]->layer_size; j++) {
                 error = subtraction_result->tab[j][0];
-                subtraction_result->tab[j][0] = d_sigmoid(temp_neurons->tab[j][0]) * error;
+                subtraction_result->tab[j][0] = d_softmax(temp_neurons->tab[j][0], temp_neurons->tab, temp_neurons->rows) * error;
             }
             matrix_copy(network->layers[i - 1]->neurons_delta, subtraction_result);
             matrixf_free(subtraction_result);
@@ -127,4 +131,20 @@ double cost(neural_network_s *network) { //MSE
         cost += (error * error);
     }
     return (cost / (double) network->layers_sizes[network->layers_count - 1]);
+}
+
+void result(neural_network_s *network) {
+    double val1, val2, val3;
+    int max_index = 0;
+    scanf("%lf %lf %lf", &val1, &val2, &val3);
+    network->layers[network->layers_count - 1]->neurons->tab[0][0] = val1;
+    network->layers[network->layers_count - 1]->neurons->tab[1][0] = val2;
+    network->layers[network->layers_count - 1]->neurons->tab[2][0] = val3;
+    feed_forward(network);
+    for (int i = 0; i < network->layers[network->layers_count - 1]->layer_size; i++) {
+        if (network->layers[network->layers_count - 1]->neurons->tab[i][0] > network->layers[network->layers_count - 1]->neurons->tab[max_index][0]) {
+            max_index = i;
+        }
+    }
+    printf("%d\n", max_index);
 }
