@@ -32,18 +32,18 @@ double d_leaky_relu(double x, double slope) {
     return x > 0 ? 1 : slope;
 }
 
-double softmax(double x, double *tab, int size) {
+double softmax(double x, double **tab, int size) {
     double sum = 0;
     for (int i = 0; i < size; i++) {
-        sum += exp(tab[i]);
+        sum += exp(tab[i][0]);
     }
     return exp(x) / sum;
 }
 
-double d_softmax(double x, double *tab, int size) {
+double d_softmax(double x, double **tab, int size) {
     double sum = 0;
     for (int i = 0; i < size; i++) {
-        sum += exp(tab[i]);
+        sum += exp(tab[i][0]);
     }
     return (sum * exp(x) - exp(x) * exp(x)) / (sum * sum);
 }
