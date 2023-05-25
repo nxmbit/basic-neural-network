@@ -137,9 +137,9 @@ void result(neural_network_s *network) {
     double val1, val2, val3;
     int max_index = 0;
     scanf("%lf %lf %lf", &val1, &val2, &val3);
-    network->layers[network->layers_count - 1]->neurons->tab[0][0] = val1;
-    network->layers[network->layers_count - 1]->neurons->tab[1][0] = val2;
-    network->layers[network->layers_count - 1]->neurons->tab[2][0] = val3;
+    network->layers[0]->neurons->tab[0][0] = val1;
+    network->layers[0]->neurons->tab[1][0] = val2;
+    network->layers[0]->neurons->tab[2][0] = val3;
     feed_forward(network);
     for (int i = 0; i < network->layers[network->layers_count - 1]->layer_size; i++) {
         if (network->layers[network->layers_count - 1]->neurons->tab[i][0] > network->layers[network->layers_count - 1]->neurons->tab[max_index][0]) {
