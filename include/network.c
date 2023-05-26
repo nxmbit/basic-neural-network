@@ -36,6 +36,7 @@ layer_s *create_layer(int layer_size, int next_layer_size) {
         layer->weights_gradient = create_matrix(next_layer_size, layer_size);
         layer->biases_gradient = create_matrix(next_layer_size, 1);
         layer->neurons_delta = create_matrix(next_layer_size, 1);
+        layer->weighed_sums = create_matrix(next_layer_size, 1);
     }
 
     return layer;
