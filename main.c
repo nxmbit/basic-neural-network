@@ -15,9 +15,9 @@ int main() {
     //dataset_s *dataset = load_data_csv("training_data.csv", 3, 70000);
     dataset_s *dataset = load_mnist(60000, "mnist_train.csv");
     //neural_network_s *network = create_neural_network(4, (int[]){3,10,20,16});
-    neural_network_s *network = create_neural_network(3, (int[]){784,300,10});
+    neural_network_s *network = create_neural_network(3, (int[]){784,64,24,10});
     //stochastic_network_train(network, dataset, 10000, 0.01, 1000);
-    stochastic_network_train(network, dataset, 10000, 0.01, 1000);
+    stochastic_network_train(network, dataset, 10000, 0.01, 100);
     //neural_network_s *network = load_model("model.txt");
     //network_train(network, dataset, 100, 0.01);
 
