@@ -84,7 +84,6 @@ void set_expected_output_neurons(neural_network_s *network, dataset_s *dataset, 
 }
 
 void network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate) {
-    printf("training...\n");
     for (int epoch = 0; epoch < epochs; epoch++) {
         double epoch_cost = 0;
         double epoch_success_rate = 0;
@@ -107,14 +106,12 @@ void network_train(neural_network_s *network, dataset_s *dataset, int epochs, do
 }
 
 void stochastic_network_train(neural_network_s *network, dataset_s *dataset, int epochs, double learning_rate, int batch_size) {
-    printf("training...\n");
     double epoch_cost = 0;
     double epoch_success_rate = 0;
     for (int epoch = 0; epoch < epochs; epoch++) {
         epoch_cost = 0;
         epoch_success_rate = 0;
         int random_index = rand() % (dataset->number_of_samples - batch_size);
-        printf("random index: %d\n", random_index);
         for (int sample_index = random_index; sample_index < (random_index + batch_size); sample_index++) {
             for (int i = 0; i < network->layers[0]->layer_size; i++) {
                 network->layers[0]->neurons->tab[i][0] = dataset->inputs->tab[sample_index][i]; //copy from dataset to first layer
