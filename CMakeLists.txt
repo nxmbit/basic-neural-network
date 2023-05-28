@@ -3,7 +3,7 @@ project(basic_neural_network C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(basic_neural_network nn.c include/matrixf_s.c include/activations.c include/network.c include/dataset.c include/training.c include/user_io.c include/user_io.h include/mnist.c include/mnist.h include/logic_gates.c include/logic_gates.h include/ui.c include/ui.h)
+add_executable(basic_neural_network nn.c include/matrixf_s.c include/activations.c include/network.c include/dataset.c include/training.c include/user_io.c include/user_io.h include/mnist.c include/mnist.h include/logic_gates.c include/logic_gates.h include/ui.c include/ui.h include/matrix_s.c include/matrix_s.h)
 target_link_libraries(basic_neural_network m)
 
 find_package (Python REQUIRED

@@ -6,7 +6,7 @@
 
 dataset_s *create_dataset(int input_neurons, int number_of_samples) {
     dataset_s *dataset = malloc(sizeof(dataset_s));
-    dataset->inputs = create_matrix(number_of_samples, input_neurons);
+    dataset->inputs = create_matrixf(number_of_samples, input_neurons);
     dataset->expected_outputs = create_matrix(number_of_samples, 1);
     dataset->number_of_samples = number_of_samples;
     dataset->input_neurons = input_neurons;
@@ -15,7 +15,7 @@ dataset_s *create_dataset(int input_neurons, int number_of_samples) {
 
 void free_dataset(dataset_s *dataset) {
     matrixf_free(dataset->inputs);
-    matrixf_free(dataset->expected_outputs);
+    matrix_free(dataset->expected_outputs);
     free(dataset);
 }
 
@@ -37,7 +37,7 @@ dataset_s *load_data_csv(const char *path, int input_neurons, int number_of_samp
             if (j < input_neurons) {
                 dataset->inputs->tab[i][j] = atof(token);
             } else {
-                dataset->expected_outputs->tab[i][0] = atof(token);
+                dataset->expected_outputs->tab[i][0] = atoi(token);
             }
             token = strtok(NULL, ",");
             j++;

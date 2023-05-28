@@ -11,7 +11,7 @@ neural_network_s *create_neural_network(int layers_count, int *layers_sizes) {
     network->layers = malloc(layers_count * sizeof(layer_s));
     network->layers_count = layers_count;
     network->layers_sizes = layers_sizes;
-    network->expected_output_neurons = create_matrix(layers_sizes[layers_count - 1], 1);
+    network->expected_output_neurons = create_matrixf(layers_sizes[layers_count - 1], 1);
     for (int i = 0; i < layers_count; i++) {
         if (i == layers_count - 1) {
             network->layers[i] = create_layer(layers_sizes[i], 0);
@@ -29,14 +29,14 @@ layer_s *create_layer(int layer_size, int next_layer_size) {
     layer_s *layer = malloc(sizeof(layer_s));
     layer->layer_size = layer_size;
     layer->next_layer_size = next_layer_size;
-    layer->neurons = create_matrix(layer_size, 1);
+    layer->neurons = create_matrixf(layer_size, 1);
     if (next_layer_size != 0) {
-        layer->weights = create_matrix(next_layer_size, layer_size);
-        layer->biases = create_matrix(next_layer_size, 1);
-        layer->weights_gradient = create_matrix(next_layer_size, layer_size);
-        layer->biases_gradient = create_matrix(next_layer_size, 1);
-        layer->neurons_delta = create_matrix(next_layer_size, 1);
-        layer->weighed_sums = create_matrix(next_layer_size, 1);
+        layer->weights = create_matrixf(next_layer_size, layer_size);
+        layer->biases = create_matrixf(next_layer_size, 1);
+        layer->weights_gradient = create_matrixf(next_layer_size, layer_size);
+        layer->biases_gradient = create_matrixf(next_layer_size, 1);
+        layer->neurons_delta = create_matrixf(next_layer_size, 1);
+        layer->weighed_sums = create_matrixf(next_layer_size, 1);
     }
 
     return layer;

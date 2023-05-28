@@ -2,10 +2,11 @@
 #define DATASET_H
 
 #include "matrixf_s.h"
+#include "matrix_s.h"
 
 typedef struct dataset_s {
     matrixf_s *inputs;
-    matrixf_s *expected_outputs;
+    matrix_s *expected_outputs;
     int number_of_samples;
     int input_neurons;
     int output_neurons;

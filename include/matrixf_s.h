@@ -7,7 +7,7 @@ typedef struct matrixf_s {
     int cols;
 } matrixf_s;
 
-matrixf_s *create_matrix(int rows, int cols);
+matrixf_s *create_matrixf(int rows, int cols);
 matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
 matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2);
 matrixf_s *matrix_subtract(const matrixf_s *matrix_1, const matrixf_s *matrix_2);

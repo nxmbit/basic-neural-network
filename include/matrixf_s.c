@@ -2,7 +2,7 @@
 #include <malloc.h>
 #include "matrixf_s.h"
 
-matrixf_s *create_matrix(int rows, int cols) {
+matrixf_s *create_matrixf(int rows, int cols) {
     matrixf_s *matrix = malloc(sizeof(matrixf_s));
     matrix->tab = malloc(rows * sizeof(double *));
     for (int i = 0; i < rows; i++) {
@@ -17,7 +17,7 @@ matrixf_s *matrix_add(const matrixf_s *matrix_1, const matrixf_s *matrix_2) {
     if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
         printf("Matrix addition is not possible!\n");
     }
-    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_1->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix_1->rows, matrix_1->cols);
 
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
@@ -31,7 +31,7 @@ matrixf_s *matrix_subtract(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
     if ((matrix_1->rows != matrix_2->rows) || (matrix_1->cols != matrix_2->cols)) {
         printf("Matrix subtraction is not possible!\n");
     }
-    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_1->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix_1->rows, matrix_1->cols);
 
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
@@ -46,7 +46,7 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
         printf("Matrix multiplication is not possible!\n");
         return NULL;
     }
-    matrixf_s *result_matrix = create_matrix(matrix_1->rows, matrix_2->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix_1->rows, matrix_2->cols);
 
     for (int i = 0; i < matrix_1->rows; i++) {
         for (int j = 0; j < matrix_2->cols; j++) {
@@ -60,7 +60,7 @@ matrixf_s *matrix_multiply(const matrixf_s *matrix_1, const matrixf_s *matrix_2)
 }
 
 matrixf_s *matrix_square_elements(const matrixf_s *matrix) {
-    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix->rows, matrix->cols);
 
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
@@ -71,7 +71,7 @@ matrixf_s *matrix_square_elements(const matrixf_s *matrix) {
 }
 
 matrixf_s *matrix_subtract_from_each_element(const matrixf_s *matrix, double value) {
-    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix->rows, matrix->cols);
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
             result_matrix->tab[i][j] = matrix->tab[i][j] - value;
@@ -81,7 +81,7 @@ matrixf_s *matrix_subtract_from_each_element(const matrixf_s *matrix, double val
 }
 
 matrixf_s *matrix_transpose(const matrixf_s *matrix) {
-    matrixf_s *result_matrix = create_matrix(matrix->cols, matrix->rows);
+    matrixf_s *result_matrix = create_matrixf(matrix->cols, matrix->rows);
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
             result_matrix->tab[i][j] = matrix->tab[j][i];
@@ -91,7 +91,7 @@ matrixf_s *matrix_transpose(const matrixf_s *matrix) {
 }
 
 matrixf_s *matrix_add_to_each_element(const matrixf_s *matrix, double value) {
-    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix->rows, matrix->cols);
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
             result_matrix->tab[i][j] = matrix->tab[i][j] + value;
@@ -101,7 +101,7 @@ matrixf_s *matrix_add_to_each_element(const matrixf_s *matrix, double value) {
 }
 
 matrixf_s *matrix_multiply_scalar(const matrixf_s *matrix, double value) {
-    matrixf_s *result_matrix = create_matrix(matrix->rows, matrix->cols);
+    matrixf_s *result_matrix = create_matrixf(matrix->rows, matrix->cols);
     for (int i = 0; i < result_matrix->rows; i++) {
         for (int j = 0; j < result_matrix->cols; j++) {
             result_matrix->tab[i][j] = matrix->tab[i][j] * value;
@@ -111,7 +111,7 @@ matrixf_s *matrix_multiply_scalar(const matrixf_s *matrix, double value) {
 }
 
 matrixf_s *split_matrix_column(const matrixf_s *matrix, int n) {
-    matrixf_s *result = create_matrix(matrix->rows, 1);
+    matrixf_s *result = create_matrixf(matrix->rows, 1);
     for (int i = 0; i < matrix->rows; i++) {
         result->tab[i][0] = matrix->tab[i][n];
     }
