@@ -1,4 +1,0 @@
-#ifndef TENSORFLOW_ADDON_H
-#define TENSORFLOW_ADDON_H
-
-#endif
