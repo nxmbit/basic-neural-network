@@ -44,16 +44,16 @@ dataset_s *load_mnist(int number_of_samples, const char *path) {
     return dataset;
 }
 
-neural_network_s *train_mnist(const char *path, int epochs, double learning_rate, int batch_size, int *layers_sizes) {
+neural_network_s *train_mnist(const char *path, int epochs, double learning_rate, int batch_size, int layers_count, int *layers_sizes) {
     dataset_s *dataset = load_mnist(60000, path);
-    neural_network_s *network = create_neural_network(4, layers_sizes);
+    neural_network_s *network = create_neural_network(layers_count, layers_sizes);
     stochastic_network_train(network, dataset, epochs, learning_rate, batch_size);
     free_dataset(dataset);
     return network;
 }
 
 void mnist_draw(neural_network_s *network) {
-    PyRun_SimpleFile(fopen("draw.pyc", "r"), "draw.pyc");
+    PyRun_SimpleFile(fopen("draw.py", "r"), "draw.py");
     const char* path = "image.csv";
     FILE *file = fopen(path, "r");
     if (file == NULL) {
