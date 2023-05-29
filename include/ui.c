@@ -35,7 +35,7 @@ void dataset_menu() {
         printf("3. Color classification\n");
         printf("4. Custom dataset\n");
         printf("5. Back\n");
-        choice = input_integer(1,3, "> ");
+        choice = input_integer(1,5, "> ");
         switch (choice) {
             case 1:
                 logic_gates_menu();
@@ -69,16 +69,16 @@ void logic_gates_menu() {
         choice = input_integer(1,5, "> ");
         switch (choice) {
             case 1:
-                train_logic_gates("and.csv", 1000, 0.01, (int[]){2,10,2});
+                logic_gates_training_menu("and.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "AND");
                 break;
             case 2:
-                train_logic_gates("or.csv", 1000, 0.01, (int[]){2,10,2});
+                logic_gates_training_menu("or.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "OR");
                 break;
             case 3:
-                train_logic_gates("xor.csv", 1000, 0.01, (int[]){2,10,2});
+                logic_gates_training_menu("xor.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "XOR");
                 break;
             case 4:
-                train_logic_gates("nand.csv", 1000, 0.01, (int[]){2,10,2});
+                logic_gates_training_menu("nand.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "NAND");
                 break;
             case 5:
             default:
@@ -87,9 +87,31 @@ void logic_gates_menu() {
     }
 }
 
+void logic_gates_training_menu(const char *def_path, int def_epochs, double def_learning_rate, int def_number_of_layers, int *def_layers_sizes, const char *gate_name) {
+    neural_network_s *network = train_logic_gates(def_path, def_epochs, def_learning_rate, def_number_of_layers, def_layers_sizes);
+    int choice = 0;
+    int val1, val2;
+    while (choice != 2) {
+        printf("1. Test %s gate\n", gate_name);
+        printf("2. Back\n");
+        choice = input_integer(1,2, "> ");
+        switch (choice) {
+            case 1:
+                val1 = input_integer(0,1, "Enter first value: ");
+                val2 = input_integer(0,1, "Enter second value: ");
+                logic_gates_test(network, val1, val2);
+                break;
+            case 2:
+            default:
+                break;
+        }
+    }
+    free_neural_network(network);
+}
+
 
 void mnist_menu() {
-    neural_network_s *network = train_mnist("mnist_train.csv", 10000, 0.01, 1000, (int[]){784,128,48,10});
+    neural_network_s *network = train_mnist("mnist_train.csv", 10000, 0.01, 100, (int[]){784,128,48,10});
     int choice = 0;
     while (choice != 2) {
         printf("1. Draw a number\n");
