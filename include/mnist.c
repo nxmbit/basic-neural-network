@@ -65,7 +65,7 @@ void mnist_draw(neural_network_s *network) {
     char *token = strtok(row, ",");
     int i = 0;
     while (token != NULL) {
-        network->layers[0]->neurons->tab[0][i] = (atof(token)) / 255.0;
+        network->layers[0]->neurons->tab[i][0] = (atof(token)) / 255.0;
         token = strtok(NULL, ",");
         i++;
     }

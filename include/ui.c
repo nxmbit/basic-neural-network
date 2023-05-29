@@ -131,11 +131,11 @@ void mnist_menu() {
 }
 
 void color_classification_menu() {
-    neural_network_s *network = train_color_classification("training_data.csv", 1000, 0.01, 100, 4, (int[]){3,10,20,16});
+    neural_network_s *network = train_color_classification("training_data.csv", 10000, 0.01, 100, 4, (int[]){3,10,20,16});
     int choice = 0;
     while (choice != 2) {
-        printf("1. Test color classification");
-        printf("2. Back");
+        printf("1. Test color classification\n");
+        printf("2. Back\n");
         choice = input_integer(1, 2, "> ");
         switch (choice) {
             case 1:
