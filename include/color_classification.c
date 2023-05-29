@@ -16,6 +16,8 @@ neural_network_s *train_color_classification(const char *path, int epochs, doubl
 void select_color(neural_network_s *network) {
     PyRun_SimpleFile(fopen("select_color.py", "r"), "select_color.py");
     const char* path = "color_cielab.csv";
+    const char labels[16][15] = {"White", "Gray", "Black", "Red", "Pink", "Dark Red", "Orange", "Brown",
+                                 "Yellow", "Green", "Dark Green", "Teal", "Light Blue", "Blue", "Dark Blue", "Purple"};
     FILE *file = fopen(path, "r"); //TODO: can split it into separate function, the code is the same as in mnist_draw
     if (file == NULL) {
         printf("Error while opening file %s\n", path);
@@ -44,5 +46,5 @@ void select_color(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("%d\n", max_index);
+    printf("%s\n", labels[max_index]);
 }
