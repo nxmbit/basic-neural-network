@@ -4,6 +4,7 @@
 #include "mnist.h"
 #include "logic_gates.h"
 #include "network.h"
+#include "color_classification.h"
 
 void main_menu() {
     int choice = 0;
@@ -44,7 +45,7 @@ void dataset_menu() {
                 mnist_menu();
                 break;
             case 3:
-                //color_classification_menu();
+                color_classification_menu();
                 break;
             case 4:
                 printf("Not implemented yet!\n");
@@ -127,6 +128,24 @@ void mnist_menu() {
         }
     }
     free_neural_network(network);
+}
+
+void color_classification_menu() {
+    neural_network_s *network = train_color_classification("training_data.csv", 1000, 0.01, 100, 4, (int[]){3,10,20,16});
+    int choice = 0;
+    while (choice != 2) {
+        printf("1. Test color classification");
+        printf("2. Back");
+        choice = input_integer(1, 2, "> ");
+        switch (choice) {
+            case 1:
+                select_color(network);
+                break;
+            case 2:
+            default:
+                break;
+        }
+    }
 }
 
 
