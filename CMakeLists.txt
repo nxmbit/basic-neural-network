@@ -13,3 +13,9 @@ target_include_directories(basic_neural_network PUBLIC ${Python_INCLUDE_DIRS})
 target_link_libraries(basic_neural_network ${Python_LIBRARIES})
 target_link_libraries(basic_neural_network ${Python_LIBRARIES})
 
+#openmp
+find_package(OpenMP REQUIRED)
+if(OpenMP_C_FOUND)
+    target_link_libraries(basic_neural_network OpenMP::OpenMP_C)
+endif()
+
