@@ -60,28 +60,32 @@ void dataset_menu() {
 
 void logic_gates_menu() {
     int choice = 0;
-    while (choice != 5) {
+    while (choice != 6) {
         printf("Select logic gate:\n");
         printf("1. AND\n");
         printf("2. OR\n");
         printf("3. XOR\n");
         printf("4. NAND\n");
-        printf("5. Back\n");
-        choice = input_integer(1,5, "> ");
+        printf("5. NOR\n");
+        printf("6. Back\n");
+        choice = input_integer(1,6, "> ");
         switch (choice) {
             case 1:
-                logic_gates_training_menu("and.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "AND");
+                logic_gates_training_menu(AND_PATH, 10000, 0.1, 3, (int[]) {2, 5, 2}, "AND");
                 break;
             case 2:
-                logic_gates_training_menu("or.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "OR");
+                logic_gates_training_menu(OR_PATH, 10000, 0.1, 3, (int[]) {2, 5, 2}, "OR");
                 break;
             case 3:
-                logic_gates_training_menu("xor.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "XOR");
+                logic_gates_training_menu(XOR_PATH, 10000, 0.1, 3, (int[]) {2, 5, 2}, "XOR");
                 break;
             case 4:
-                logic_gates_training_menu("nand.csv", 10000, 0.1, 3, (int[]) {2, 5, 2}, "NAND");
+                logic_gates_training_menu(NAND_PATH, 10000, 0.1, 3, (int[]) {2, 5, 2}, "NAND");
                 break;
             case 5:
+                logic_gates_training_menu(NOR_PATH, 10000, 0.1, 3, (int[]) {2, 5, 2}, "OR");
+                break;
+            case 6:
             default:
                 break;
         }
@@ -112,7 +116,7 @@ void logic_gates_training_menu(const char *def_path, int def_epochs, double def_
 
 
 void mnist_menu() {
-    neural_network_s *network = train_mnist("mnist_train.csv", 7500, 0.06, 300, 4, (int[]){784,230,64,10});
+    neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 7500, 0.06, 300, 4, (int[]){784,230,64,10});
     int choice = 0;
     while (choice != 2) {
         printf("1. Draw a number\n");
@@ -131,7 +135,7 @@ void mnist_menu() {
 }
 
 void color_classification_menu() {
-    neural_network_s *network = train_color_classification("training_data.csv", 10000, 0.01, 100, 4, (int[]){3,10,20,16});
+    neural_network_s *network = train_color_classification(COLOR_DATASET_PATH, 10000, 0.01, 100, 4, (int[]){3,10,20,16});
     int choice = 0;
     while (choice != 2) {
         printf("1. Test color classification\n");

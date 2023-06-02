@@ -13,7 +13,7 @@
 int main(int argc, char *argv[]) {
     Py_Initialize();
     srand(time(NULL));
-    //dataset_s *dataset = load_data_csv("training_data.csv", 3, 70000);
+    //dataset_s *dataset = load_data_csv("colors_cielab.csv", 3, 70000);
     //dataset_s *dataset = load_mnist(60000, "mnist_train.csv");
     //neural_network_s *network = create_neural_network(4, (int[]){3,10,20,16});
     //neural_network_s *network = create_neural_network(4, (int[]){784,128,48,10});

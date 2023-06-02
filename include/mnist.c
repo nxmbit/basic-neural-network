@@ -53,7 +53,7 @@ neural_network_s *train_mnist(const char *path, int epochs, double learning_rate
 }
 
 void mnist_draw(neural_network_s *network) {
-    PyRun_SimpleFile(fopen("draw.py", "r"), "draw.py");
+    PyRun_SimpleFile(fopen(MNIST_DRAW, "r"), "draw.py");
     const char* path = "image.csv";
     FILE *file = fopen(path, "r");
     if (file == NULL) {
