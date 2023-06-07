@@ -126,7 +126,7 @@ neural_network_s *load_model(const char *path) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
         printf("Error while opening file %s\n", path);
-        exit(1);
+        return NULL;
     }
 
     int layers_count = 0;

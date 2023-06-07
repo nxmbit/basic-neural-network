@@ -42,10 +42,10 @@ void dataset_menu() {
                 logic_gates_menu();
                 break;
             case 2:
-                mnist_menu();
+                mnist_menu(0, NULL);
                 break;
             case 3:
-                color_classification_menu();
+                color_classification_menu(0, NULL);
                 break;
             case 4:
                 printf("Not implemented yet!\n");
@@ -115,44 +115,88 @@ void logic_gates_training_menu(const char *def_path, int def_epochs, double def_
 }
 
 
-void mnist_menu() {
-    neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 7500, 0.06, 300, 4, (int[]){784,230,64,10});
-    int choice = 0;
-    while (choice != 2) {
-        printf("1. Draw a number\n");
-        printf("2. Back\n");
-        choice = input_integer(1,2, "> ");
-        switch (choice) {
-            case 1:
-                mnist_draw(network);
-                break;
-            case 2:
-            default:
-                break;
+void mnist_menu(int model_loaded, neural_network_s *model) {
+    if (model_loaded) {
+        int choice = 0;
+        while (choice != 2) {
+            printf("1. Draw a number\n");
+            printf("2. Back\n");
+            choice = input_integer(1,2, "> ");
+            switch (choice) {
+                case 1:
+                    mnist_draw(model);
+                    break;
+                case 2:
+                default:
+                    break;
+            }
         }
+    } else {
+        neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 7500, 0.06, 300, 4, (int[]){784,230,64,10});
+        int choice = 0;
+        while (choice != 3) {
+            printf("1. Draw a number\n");
+            printf("2. Save model\n");
+            printf("3. Back\n");
+            choice = input_integer(1,2, "> ");
+            switch (choice) {
+                case 1:
+                    mnist_draw(network);
+                    break;
+                case 2:
+                    save_model(network, MNIST_DEFAULT_MODEL_PATH);
+                    printf("Model saved!\n");
+                    break;
+                case 3:
+                default:
+                    break;
+            }
+        }
+        free_neural_network(network);
     }
-    free_neural_network(network);
 }
 
-void color_classification_menu() {
-    neural_network_s *network = train_color_classification(COLOR_DATASET_PATH, 10000, 0.01, 100, 4, (int[]){3,10,20,16});
-    int choice = 0;
-    while (choice != 2) {
-        printf("1. Test color classification\n");
-        printf("2. Back\n");
-        choice = input_integer(1, 2, "> ");
-        switch (choice) {
-            case 1:
-                select_color(network);
-                break;
-            case 2:
-            default:
-                break;
+void color_classification_menu(int model_loaded, neural_network_s *model) {
+    if (model_loaded) {
+        int choice = 0;
+        while (choice != 2) {
+            printf("1. Select color\n");
+            printf("2. Back\n");
+            choice = input_integer(1, 2, "> ");
+            switch (choice) {
+                case 1:
+                    select_color(model);
+                    break;
+                case 2:
+                default:
+                    break;
+            }
+        }
+    } else {
+        neural_network_s *network = train_color_classification(COLOR_DATASET_PATH, 10000, 0.01, 100, 4,
+                                                               (int[]) {3, 10, 20, 16});
+        int choice = 0;
+        while (choice != 3) {
+            printf("1. Test color classification\n");
+            printf("2. Save model\n");
+            printf("3. Back\n");
+            choice = input_integer(1, 3, "> ");
+            switch (choice) {
+                case 1:
+                    select_color(network);
+                    break;
+                case 2:
+                    save_model(network, COLOR_DEFAULT_MODEL_PATH);
+                    printf("Model saved!\n");
+                    break;
+                case 3:
+                default:
+                    break;
+            }
+            free_neural_network(network);
         }
     }
 }
-
-
 /*
 void training_settings_menu() {
 // TODO: custom training settings
@@ -160,6 +204,37 @@ void training_settings_menu() {
 */
 
 void load_model_menu() {
-
-
+    neural_network_s *model = NULL;
+    int choice = 0;
+    while (choice != 3) {
+        printf("1. Load MNIST model\n");
+        printf("2. Load Color Classification model\n");
+        printf("3. Back\n");
+        choice = input_integer(1, 3, "> ");
+        switch (choice) {
+            case 1:
+                model = load_model(MNIST_DEFAULT_MODEL_PATH);
+                if (model == NULL) {
+                    printf("Failed to load model!\n");
+                } else {
+                    printf("Model loaded!\n");
+                    mnist_menu(1, model);
+                    free_neural_network(model);
+                }
+                break;
+            case 2:
+                model = load_model(COLOR_DEFAULT_MODEL_PATH);
+                if (model == NULL) {
+                    printf("Failed to load model!\n");
+                } else {
+                    printf("Model loaded!\n");
+                    color_classification_menu(1, model);
+                    free_neural_network(model);
+                }
+                break;
+            case 3:
+            default:
+                break;
+        }
+    }
 }

@@ -6,6 +6,7 @@
 
 #define MNIST_DATASET_PATH "../datasets/mnist/mnist_train.csv"
 #define MNIST_DRAW "../utils/mnist/draw_mnist.py"
+#define MNIST_DEFAULT_MODEL_PATH "../models/mnist/model.csv"
 
 dataset_s *load_mnist(int number_of_samples, const char *path);
 void mnist_draw(neural_network_s *network);

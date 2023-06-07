@@ -12,7 +12,7 @@ typedef struct layer_s {
     matrixf_s *weights_gradient;
     matrixf_s *biases_gradient;
     matrixf_s *neurons_delta;
-    matrixf_s *weighed_sums
+    matrixf_s *weighed_sums;
 } layer_s;
 
 typedef struct neural_network_s {
