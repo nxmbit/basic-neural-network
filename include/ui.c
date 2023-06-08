@@ -132,13 +132,13 @@ void mnist_menu(int model_loaded, neural_network_s *model) {
             }
         }
     } else {
-        neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 7500, 0.06, 300, 4, (int[]){784,230,64,10});
+        neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 1000, 0.05, 300, 4, (int[]){784,200,72,10});
         int choice = 0;
         while (choice != 3) {
             printf("1. Draw a number\n");
             printf("2. Save model\n");
             printf("3. Back\n");
-            choice = input_integer(1,2, "> ");
+            choice = input_integer(1,3, "> ");
             switch (choice) {
                 case 1:
                     mnist_draw(network);

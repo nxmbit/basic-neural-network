@@ -2,9 +2,10 @@ import pygame
 import csv
 import numpy as np
 
+
 window_size = 560
 canvas_size = 28
-brush_size = 1  # Wielkość pędzla (rozmiar pędzla / 2)
+brush_size = 1
 scaling_factor = window_size // canvas_size
 
 pygame.init()
