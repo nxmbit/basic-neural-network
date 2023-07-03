@@ -11,5 +11,6 @@
 dataset_s *load_mnist(int number_of_samples, const char *path);
 void mnist_draw(neural_network_s *network);
 neural_network_s *train_mnist(const char *path, int epochs, double learning_rate, int batch_size, int layers_count, int *layers_sizes);
+void mnist_menu(int model_loaded, neural_network_s *model);
 
 #endif

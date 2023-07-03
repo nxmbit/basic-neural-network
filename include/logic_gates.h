@@ -11,5 +11,7 @@
 
 neural_network_s *train_logic_gates(const char *path, int epochs, double learning_rate, int layers_count,  int *layers_sizes);
 void logic_gates_test(neural_network_s *network, int val1, int val2);
+void logic_gates_menu();
+void logic_gates_training_menu(const char *def_path, int def_epochs, double def_learning_rate, int def_number_of_layers, int *def_layers_sizes, const char *gate_name);
 
 #endif

@@ -9,5 +9,6 @@
 
 neural_network_s *train_color_classification(const char *path, int epochs, double learning_rate, int batch_size, int layers_count,  int *layers_sizes);
 void select_color(neural_network_s *network);
+void color_classification_menu(int model_loaded, neural_network_s *model);
 
 #endif
