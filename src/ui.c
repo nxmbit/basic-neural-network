@@ -5,6 +5,7 @@
 #include "logic_gates.h"
 #include "network.h"
 #include "color_classification.h"
+#include "custom_dataset.h"
 
 void main_menu() {
     int choice = 0;
@@ -48,8 +49,7 @@ void dataset_menu() {
                 color_classification_menu(0, NULL);
                 break;
             case 4:
-                printf("Not implemented yet!\n");
-                //custom_dataset_menu(); TODO: implement custom dataset support
+                custom_dataset_menu(0, NULL);
                 break;
             case 5:
             default:
@@ -58,20 +58,15 @@ void dataset_menu() {
     }
 }
 
-/*
-void training_settings_menu() {
-// TODO: custom training settings
-}
-*/
-
 void load_model_menu() {
     neural_network_s *model = NULL;
     int choice = 0;
     while (choice != 3) {
         printf("1. Load MNIST model\n");
         printf("2. Load Color Classification model\n");
-        printf("3. Back\n");
-        choice = input_integer(1, 3, "> ");
+        printf("3. Load model of custom dataset\n");
+        printf("4. Back\n");
+        choice = input_integer(1, 4, "> ");
         switch (choice) {
             case 1:
                 model = load_model(MNIST_DEFAULT_MODEL_PATH);
@@ -94,6 +89,7 @@ void load_model_menu() {
                 }
                 break;
             case 3:
+            case 4:
             default:
                 break;
         }

@@ -2,7 +2,7 @@
 #include <time.h>
 #include <string.h>
 #include <Python.h>
-#include "include/ui.h"
+#include "src/ui.h"
 
 int main(int argc, char *argv[]) {
     Py_Initialize();
