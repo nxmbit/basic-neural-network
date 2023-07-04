@@ -119,5 +119,5 @@ void mnist_draw(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("%d\n", max_index);
+    printf("Result: %d\n", max_index);
 }

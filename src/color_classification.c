@@ -89,5 +89,5 @@ void select_color(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("%s\n", labels[max_index]);
+    printf("Color Name: %s\n", labels[max_index]);
 }
