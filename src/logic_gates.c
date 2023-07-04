@@ -8,7 +8,6 @@
 void logic_gates_menu() {
     int choice = 0;
     while (choice != 6) {
-        clrscr();
         printf("Select logic gate:\n");
         printf("1. AND\n");
         printf("2. OR\n");
@@ -45,7 +44,6 @@ void logic_gates_training_menu(const char *def_path, int def_epochs, double def_
     int choice = 0;
     int val1, val2;
     while (choice != 2) {
-        clrscr();
         printf("1. Test %s gate\n", gate_name);
         printf("2. Back\n");
         choice = input_integer(1,2, "> ");
@@ -81,5 +79,5 @@ void logic_gates_test(neural_network_s *network, int val1, int val2) {
             max_index = j;
         }
     }
-    printf("Result: %d\n\n", max_index);
+    printf("Result: %d\n", max_index);
 }

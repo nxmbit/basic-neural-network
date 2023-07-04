@@ -12,7 +12,6 @@ void mnist_menu(int model_loaded, neural_network_s *model) {
     if (model_loaded) {
         int choice = 0;
         while (choice != 2) {
-            clrscr();
             printf("1. Draw a number\n");
             printf("2. Back\n");
             choice = input_integer(1,2, "> ");
@@ -29,7 +28,6 @@ void mnist_menu(int model_loaded, neural_network_s *model) {
         neural_network_s *network = train_mnist(MNIST_DATASET_PATH, 1000, 0.05, 300, 4, (int[]){784,200,72,10});
         int choice = 0;
         while (choice != 3) {
-            clrscr();
             printf("1. Draw a number\n");
             printf("2. Save model\n");
             printf("3. Back\n");
@@ -121,5 +119,5 @@ void mnist_draw(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("Result: %d\n\n", max_index);
+    printf("%d\n", max_index);
 }

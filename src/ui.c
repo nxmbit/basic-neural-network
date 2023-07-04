@@ -12,7 +12,6 @@
 void main_menu() {
     int choice = 0;
     while (choice != 3) {
-        clrscr();
         printf("1. Choose dataset to train on\n");
         printf("2. Load model\n");
         printf("3. Quit\n");
@@ -34,7 +33,6 @@ void main_menu() {
 void dataset_menu() {
     int choice = 0;
     while (choice != 5) {
-        clrscr();
         printf("Select dataset:\n");
         printf("1. Logic gates\n");
         printf("2. MNIST\n");
@@ -68,7 +66,6 @@ void load_model_menu() {
     char *name, *model_path;
     int choice = 0;
     while (choice != 4) {
-        clrscr();
         printf("1. Load MNIST model\n");
         printf("2. Load Color Classification model\n");
         printf("3. Load model of custom dataset\n");
