@@ -10,6 +10,7 @@ void color_classification_menu(int model_loaded, neural_network_s *model) {
     if (model_loaded) {
         int choice = 0;
         while (choice != 2) {
+            clrscr();
             printf("1. Select color\n");
             printf("2. Back\n");
             choice = input_integer(1, 2, "> ");
@@ -27,6 +28,7 @@ void color_classification_menu(int model_loaded, neural_network_s *model) {
                                                                (int[]) {3, 10, 20, 16});
         int choice = 0;
         while (choice != 3) {
+            clrscr();
             printf("1. Test color classification\n");
             printf("2. Save model\n");
             printf("3. Back\n");
@@ -89,5 +91,5 @@ void select_color(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("%s\n", labels[max_index]);
+    printf("Color name: %s\n\n", labels[max_index]);
 }

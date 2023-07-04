@@ -13,6 +13,7 @@ void custom_dataset_menu(int model_loaded, neural_network_s *model) {
     if (model_loaded) {
         int choice = 0;
         while (choice != 2) {
+            clrscr();
             printf("1. Test dataset\n");
             printf("2. Back\n");
             choice = input_integer(1, 2, "> ");
@@ -49,6 +50,7 @@ void custom_dataset_menu(int model_loaded, neural_network_s *model) {
 
         int choice = 0;
         while (choice != 3) {
+            clrscr();
             printf("1. Test dataset\n");
             printf("2. Save model\n");
             printf("3. Back\n");
@@ -97,5 +99,5 @@ void test_custom_dataset(neural_network_s *network) {
             max_index = j;
         }
     }
-    printf("Result: %d\n", max_index);
+    printf("Result: %d\n\n", max_index);
 }
