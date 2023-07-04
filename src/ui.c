@@ -65,7 +65,7 @@ void load_model_menu() {
     const char *custom_dataset_model_folder = "../models/custom/";
     char *name, *model_path;
     int choice = 0;
-    while (choice != 3) {
+    while (choice != 4) {
         printf("1. Load MNIST model\n");
         printf("2. Load Color Classification model\n");
         printf("3. Load model of custom dataset\n");
