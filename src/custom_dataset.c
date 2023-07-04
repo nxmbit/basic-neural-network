@@ -29,14 +29,15 @@ void custom_dataset_menu(int model_loaded, neural_network_s *model) {
         const char *custom_dataset_model_folder = "../models/custom/";
         const char *custom_dataset_folder = "../datasets/custom/";
 
-        char *path = input_string(128,"Enter dataset name: ");
-        char *dataset_path = malloc(sizeof(char) * (strlen(custom_dataset_folder) + strlen(path) + 1));
+        char *name = input_string(128, "Enter dataset name: ");
+        char *dataset_path = malloc(sizeof(char) * (strlen(custom_dataset_folder) + strlen(name) + 1));
         strcpy(dataset_path, custom_dataset_folder);
-        strcat(dataset_path, path);
+        strcat(dataset_path, name);
 
         int samples_num = input_integer(1, INT_MAX, "Enter number of samples: ");
         int batch_size = input_integer(1, samples_num, "Enter batch size: ");
         int number_of_epochs = input_integer(1, INT_MAX, "Enter number of epochs: ");
+        double learning_rate = input_double("Enter learning rate: ");
         int layers_count = input_integer(1, 100, "Enter number of layers: ");
         int *layers_sizes = malloc(sizeof(int) * layers_count);
         for (int i = 0; i < layers_count; i++) {
@@ -44,7 +45,7 @@ void custom_dataset_menu(int model_loaded, neural_network_s *model) {
             layers_sizes[i] = input_integer(1, INT_MAX, "");
         }
 
-        neural_network_s *network = train_custom_dataset(dataset_path, number_of_epochs, 0.01, batch_size, layers_count, layers_sizes, samples_num);
+        neural_network_s *network = train_custom_dataset(dataset_path, number_of_epochs, learning_rate, batch_size, layers_count, layers_sizes, samples_num);
 
         int choice = 0;
         while (choice != 3) {
@@ -69,10 +70,10 @@ void custom_dataset_menu(int model_loaded, neural_network_s *model) {
                 default:
                     break;
             }
-            free_neural_network(network);
         }
         free(layers_sizes);
         free(dataset_path);
+        free_neural_network(network);
     }
 }
 
@@ -87,9 +88,7 @@ neural_network_s *train_custom_dataset(const char *path, int epochs, double lear
 void test_custom_dataset(neural_network_s *network) {
     for (int i = 0; i < network->layers[0]->layer_size; i++) {
         printf("Enter value for input %d: ", i + 1);
-        double test;
-        scanf("%lf", &test);
-        network->layers[0]->neurons->tab[i][0] = test;
+        network->layers[0]->neurons->tab[i][0] = input_double("");
     }
     int max_index = 0;
     feed_forward(network);

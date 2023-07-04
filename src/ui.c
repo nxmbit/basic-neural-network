@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <malloc.h>
+#include <string.h>
 #include "ui.h"
 #include "user_io.h"
 #include "mnist.h"
@@ -60,6 +62,8 @@ void dataset_menu() {
 
 void load_model_menu() {
     neural_network_s *model = NULL;
+    const char *custom_dataset_model_folder = "../models/custom/";
+    char *name, *model_path;
     int choice = 0;
     while (choice != 3) {
         printf("1. Load MNIST model\n");
@@ -89,6 +93,19 @@ void load_model_menu() {
                 }
                 break;
             case 3:
+                name = input_string(128, "Enter model name: ");
+                model_path = malloc(sizeof(char) * (strlen(custom_dataset_model_folder) + strlen(name) + 1));
+                strcpy(model_path, custom_dataset_model_folder);
+                strcat(model_path, name);
+                model = load_model(model_path);
+                if (model == NULL) {
+                    printf("Failed to load model!\n");
+                } else {
+                    printf("Model loaded!\n");
+                    custom_dataset_menu(1, model);
+                    free_neural_network(model);
+                }
+                break;
             case 4:
             default:
                 break;
