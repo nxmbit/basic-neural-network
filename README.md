@@ -30,7 +30,7 @@ The dataset has to be formatted in the following way (all entries are separated 
 - `val1`, `val2`, `val3`, ... are the actual numerical values for each 'data_entry'.
 - `expected_index1`, `expected_index2`, `expected_index...`, are the actual indices for the 'expected_value_index'.
 
-## Testing and Saving Models trained on custom datasets
+## Testing and saving models trained on custom datasets
 After training the network on your custom dataset, you can input data from the keyboard for each neuron, and the program will return the index which it determines to be correct according to the trained network.
 
 Moreover, the trained model can be saved to a file for future usage. You can load it back later. The models are saved in the `models/custom` folder.
